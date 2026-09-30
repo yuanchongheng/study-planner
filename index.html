@@ -459,7 +459,7 @@ $('appList').addEventListener('change',e=>{if(!e.target.matches('[data-app]'))re
 function download(name,body,mime){let b=new Blob([body],{type:mime}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1000)}
 $('exportBtn').addEventListener('click',()=>{download(`双线备考完整备份_${iso(new Date())}.json`,JSON.stringify({format:KEY,exportedAt:new Date().toISOString(),data:state},null,2),'application/json;charset=utf-8');toast('完整备份已导出，包含考公与考博两部分。')});
 $('civilCsv').addEventListener('click',()=>{if(!state.civilMocks.length){toast('暂无行测记录可导出。');return}let rows=[['日期','试卷类型','模考成绩(分)','模块','正确','作答','耗时(分钟秒)','耗时(秒)','正确率','单题耗时(秒)','复盘备注']];state.civilMocks.forEach(x=>safeArray(x.metrics).forEach(m=>{let secs=civilMetricSeconds(m);rows.push([x.date,x.type,(x.score===null||x.score===undefined)?'':x.score,m.name,m.c,m.n,formatSeconds(secs),secs,m.n?(100*m.c/m.n).toFixed(2)+'%':'',m.n?(secs/m.n).toFixed(2):'',x.notes||''])}));let csv='\ufeff'+rows.map(row=>row.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\r\n');download(`行测摸底_${iso(new Date())}.csv`,csv,'text/csv;charset=utf-8');toast('行测 CSV 已导出。')});
-$('importBtn').addEventListener('click',()=>$('importFile').click());$('importFile').addEventListener('change',async e=>{let file=e.target.files?.[0];if(!file)return;try{let x=JSON.parse(await file.text()),candidate=typeof structuredClone==='function'?structuredClone(state):JSON.parse(JSON.stringify(state));if(x?.format===KEY&&x.data?.days&&Array.isArray(x.data.civilMocks)&&Array.isArray(x.data.phdLogs)){if(!confirm('导入完整备份会替换本网页所有已有数据，是否继续？'))return;state={...defaults(),...x.data,settings:{...defaults().settings,...x.data.settings},dailyGoals:x.data.dailyGoals&&typeof x.data.dailyGoals==='object'?x.data.dailyGoals:{},drills:safeArray(x.data.drills)}}else if(x?.format===OLD_P&&x.data){if(!confirm('将旧考博记录合并到本网页，替换当前三高记录及申请清单；行测和申论记录不变。继续吗？'))return;importPhd(x.data,candidate);state=candidate}else if(x?.days&&Array.isArray(x.mocks)&&Array.isArray(x.essays)){if(!confirm('将旧考公记录合并到本网页，替换当前行测及申论记录；三高记录不变。继续吗？'))return;importCivil(x,candidate);state=candidate}else throw Error('无法识别备份格式');save();$('switchDate').value=state.settings.switchDate;$('milestone').value=state.settings.milestone;clearCivil();renderAll();toast('数据导入成功。')}catch(err){console.error(err);toast('无法导入：请选择旧考公、旧考博或本网页的JSON备份。')}finally{e.target.value=''}});
+$('importBtn').addEventListener('click',()=>$('importFile').click());$('importFile').addEventListener('change',async e=>{let file=e.target.files?.[0];if(!file)return;try{let x=JSON.parse(await file.text()),candidate=typeof structuredClone==='function'?structuredClone(state):JSON.parse(JSON.stringify(state));if(x?.format===KEY&&x.data?.days&&Array.isArray(x.data.civilMocks)&&Array.isArray(x.data.phdLogs)){if(!confirm('导入完整备份会替换本网页所有已有数据。\n\n如果当前已登录云同步，导入后还会把这份备份同步到云端，用它恢复所有设备。\n\n是否继续？'))return;state={...defaults(),...x.data,settings:{...defaults().settings,...x.data.settings},dailyGoals:x.data.dailyGoals&&typeof x.data.dailyGoals==='object'?x.data.dailyGoals:{},drills:safeArray(x.data.drills)}}else if(x?.format===OLD_P&&x.data){if(!confirm('将旧考博记录合并到本网页，替换当前三高记录及申请清单；行测和申论记录不变。继续吗？'))return;importPhd(x.data,candidate);state=candidate}else if(x?.days&&Array.isArray(x.mocks)&&Array.isArray(x.essays)){if(!confirm('将旧考公记录合并到本网页，替换当前行测及申论记录；三高记录不变。继续吗？'))return;importCivil(x,candidate);state=candidate}else throw Error('无法识别备份格式');save();$('switchDate').value=state.settings.switchDate;$('milestone').value=state.settings.milestone;clearCivil();renderAll();toast('数据导入成功。')}catch(err){console.error(err);toast('无法导入：请选择旧考公、旧考博或本网页的JSON备份。')}finally{e.target.value=''}});
 function renderAll(){renderDay();renderCivilHistory();renderDrillHistory();renderEssays();renderTopics();renderPhdLogs();renderApps();analyzeCivil()}
 document.querySelectorAll('.sidebar nav a').forEach(a=>a.addEventListener('click',()=>{document.querySelectorAll('.sidebar nav a').forEach(x=>x.classList.remove('active'));a.classList.add('active')}));
 
@@ -468,7 +468,24 @@ const CLOUD_CFG='dual-study-cloud-config-v1', CLOUD_AUTH='dual-study-cloud-auth-
 let cloudConfig=null, cloudAuth=null, remoteRevision=null, cloudBusy=false, cloudDirty=false, cloudConflict=false, cloudTimer=null, cloudLastTokenRefresh=0, cloudInitialized=false;
 const cloudStatus=(text,kind='')=>{const e=$('cloudStatus');e.textContent='● '+text;e.className='cloud-status '+kind};
 const cloudTip=text=>{$('cloudHint').textContent=text};
-function cloudLocalMeaningful(){return Object.keys(state.days||{}).length>0||Object.keys(state.dailyGoals||{}).length>0||safeArray(state.civilMocks).length>0||safeArray(state.drills).length>0||safeArray(state.essays).length>0||safeArray(state.phdLogs).length>0||Object.keys(state.apps||{}).length>0||Object.keys(state.topics||{}).length>0||Boolean(state.settings?.appNote)}
+function cloudLocalMeaningful(){
+  const base=defaults();
+  const dayMeaningful=Object.values(state.days||{}).some(d=>{
+    if(!d||typeof d!=='object')return false;
+    if(d.mode&&d.mode!=='auto')return true;
+    if(Object.keys(d.checked||{}).length)return true;
+    if(Object.values(d.extraTasks||{}).some(a=>Array.isArray(a)&&a.length))return true;
+    if(Object.values(d.hiddenTasks||{}).some(a=>Array.isArray(a)&&a.length))return true;
+    if(Object.values(d.taskOverrides||{}).some(m=>m&&typeof m==='object'&&Object.keys(m).length))return true;
+    if(Object.values(d.timeOverrides||{}).some(m=>m&&typeof m==='object'&&Object.keys(m).length))return true;
+    if(d.copiedSchedule)return true;
+    return false;
+  });
+  const goalsMeaningful=Object.values(state.dailyGoals||{}).some(a=>Array.isArray(a)&&a.length);
+  const settingsMeaningful=['startPhd','switchDate','milestone','appNote'].some(k=>String(state.settings?.[k]??'')!==String(base.settings?.[k]??''));
+  const templatesMeaningful=JSON.stringify(state.taskTemplates||{})!==JSON.stringify(base.taskTemplates||{});
+  return dayMeaningful||goalsMeaningful||safeArray(state.civilMocks).length>0||safeArray(state.drills).length>0||safeArray(state.essays).length>0||safeArray(state.phdLogs).length>0||Object.keys(state.apps||{}).length>0||Object.keys(state.topics||{}).length>0||settingsMeaningful||templatesMeaningful
+}
 function cloudConfigGet(){try{return JSON.parse(localStorage.getItem(CLOUD_CFG)||'null')}catch{return null}}
 function cloudAuthGet(){try{return JSON.parse(localStorage.getItem(CLOUD_AUTH)||'null')}catch{return null}}
 function validCloudUrl(u){try{let x=new URL(u);return x.protocol==='https:'&&/^[a-z0-9-]+\.supabase\.co$/i.test(x.hostname)&&x.pathname==='/'&&x.search===''&&x.hash===''}catch{return false}}
