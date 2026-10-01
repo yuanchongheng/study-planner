@@ -67,4 +67,5 @@ function setup(bridge){
   if(serverReady){status('双向同步待检查','warn');setTimeout(()=>window.__notionDateChanged?.(bridge.selected()),1600)}else{status('双向同步待部署','warn');message('首次启用双向同步：部署新版 Supabase Edge Function 后，点击“立即双向同步”完成连接。')}
 }
 window.__setupNotionV2=setup;
+if(window.__notionBridge)setup(window.__notionBridge);
 })();
