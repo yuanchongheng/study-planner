@@ -535,8 +535,6 @@ $('drillCsv').addEventListener('click',()=>{if(!state.drills.length){toast('æš‚æ
 
 
 function civilRangeRows(){
-
-function civilRangeRows(){
   let rows=[...safeArray(state.civilMocks)].sort((a,b)=>String(b.date).localeCompare(String(a.date))||(b.savedAt||0)-(a.savedAt||0)),range=$('civilRange')?.value||'5';
   return range==='all'?rows:rows.slice(0,Number(range));
 }
