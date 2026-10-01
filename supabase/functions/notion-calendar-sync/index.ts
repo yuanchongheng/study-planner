@@ -10,7 +10,7 @@
  * NOTION_TOKEN, NOTION_DATABASE_ID, NOTION_ALLOWED_USER_ID, NOTION_SITE_ORIGIN
  * Supabase supplies SUPABASE_URL and SUPABASE_ANON_KEY.
  */
-const VERSION = '2026-03-11';
+const VERSION = '2025-09-03';
 const TZ = 'Asia/Shanghai';
 const uuidRe = /^[0-9a-f]{8}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{12}$/i;
 const dateRe = /^\d{4}-\d{2}-\d{2}$/;
