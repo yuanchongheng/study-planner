@@ -161,7 +161,7 @@ const $=id=>document.getElementById(id), esc=v=>String(v??'').replace(/[&<>"']/g
 const pad=n=>String(n).padStart(2,'0'), iso=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
 const dateObj=s=>{let a=String(s).split('-').map(Number);return new Date(a[0],a[1]-1,a[2],12)};
 const today=iso(new Date()), first=today<'2026-09-18'?'2026-09-18':today;
-const SUBJECTS=['高级微观','高级宏观','高级计量'], MODULES=['资料分析','言语理解','判断推理','数量关系','政治理论','常识判断'];
+const SUBJECTS=['高级微观','高级宏观','高级计量'], MODULES=['常识判断','政治理论','判断推理','言语理解','数量关系','资料分析'];
 const DRILL_SUBS={
  '资料分析':['材料定位','增长率 / 增长量','比重','平均数','倍数 / 年均','综合计算'],
  '言语理解':['逻辑填空','片段阅读','语句表达','篇章阅读'],
@@ -507,7 +507,7 @@ function analyzeCivil(){
 $('moduleGrid').addEventListener('input',analyzeCivil);
 $('civilRange').addEventListener('change',renderCivilAnalytics);
 
-const drillModules=Object.keys(DRILL_SUBS);
+const drillModules=['常识判断','政治理论','判断推理','言语理解','数量关系','资料分析'];
 function drillPct(c,n){return n?100*Number(c||0)/Number(n):NaN}
 function drillAccClass(p){return !Number.isFinite(p)?'':p>=85?'good':p<70?'weak':''}
 function drillRangeRows(){let range=$('drillRange')?.value||'14',rows=safeArray(state.drills);if(range==='all')return rows;let end=dateObj(today),start=new Date(end);start.setDate(start.getDate()-(Number(range)-1));let s=iso(start);return rows.filter(x=>x.date>=s&&x.date<=today)}
