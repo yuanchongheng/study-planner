@@ -253,23 +253,65 @@ function renderSubChanges(rows){
  $("subChanges").innerHTML=html;
 }
 function buildAdvice(rows){
- var out=[],stats=MODULES.map(function(name){return {name:name,m:aggregateMock(name,rows.mocks),d:aggregateDrill(name,rows.drills)}});
+ var stats=MODULES.map(function(name){return {name:name,m:aggregateMock(name,rows.mocks),d:aggregateDrill(name,rows.drills)}}),
+     moduleAdvice=[],
+     strategies={
+       "常识判断":"按法律、经济、科技、人文历史、地理国情拆分错题，优先复盘高频知识盲点；常识不建议为了少数偏题无限扩展记忆范围。",
+       "政治理论":"把错题归到原理、中特、党史党建和时政政策；优先解决概念边界与表述辨析，避免只背答案。",
+       "判断推理":"按图形、定义、类比、逻辑判断拆分；先稳定识别题型和推理链，再压单题用时，尤其关注“会做但超时”的题。",
+       "言语理解":"按逻辑填空、片段阅读、语句表达、篇章阅读分别看正确率和用时；先处理最低子模块，再用混合题验证题型切换和阅读节奏。",
+       "数量关系":"先筛选高频可得分题型，记录放弃题与超时题；正确率未稳定前不追求全做，优先提高可识别题型的命中率。",
+       "资料分析":"重点看定位、列式和计算三类耗时；保持高正确率的同时压缩单题用时，错题要区分公式、口径和计算失误。"
+     };
+
  stats.forEach(function(s){
-   var m=s.m,d=s.d;
-   if(m.n>=10&&d.n>=10&&m.p<75&&d.p>=82)out.push({level:"high",title:s.name+"：专项会做，但模考没有兑现",text:"接下来减少纯同类刷题，把训练改成混合限时：10—20题跨题型组合，做完立刻复盘“识别题型、切换顺序、超时跳题”。下一次模考只验证这一项。",evidence:"模考 "+fmtPct(m.p)+"；专项 "+fmtPct(d.p)+"。"});
-   else if(m.n+d.n>=15&&((Number.isFinite(m.p)&&m.p<72)||(Number.isFinite(d.p)&&d.p<72)))out.push({level:"high",title:s.name+"：正确率仍是首要矛盾",text:"先停止追求更快速度。用小组题训练方法稳定性：每组10—15题，错题必须标记为知识点、审题、计算、推理链或时间压力，再针对最高频错因复练。",evidence:"模考 "+fmtPct(m.p)+"；专项 "+fmtPct(d.p)+"。"});
-   if(d.items.length>=2&&Number.isFinite(d.delta)&&d.delta<-6)out.push({level:"medium",title:s.name+"：专项正确率近期下降",text:"回看最近两次专项，比较题型构成和单题用时。如果速度同时变快，先放宽时间约10%，把正确率恢复后再逐步压时。",evidence:"专项最近变化 "+trendLabel(d.delta,true)+"；用时变化 "+trendLabel(d.paceDelta,false)+"。"});
-   if(m.items.length>=2&&Number.isFinite(m.delta)&&m.delta<-6)out.push({level:"high",title:s.name+"：模考表现出现回落",text:"优先复盘最近两套卷中重复出现的错误类型，不要只看答案。把“会做但错/会做但超时”的题单独抽出，下一次整卷前只复练这一类。",evidence:"模考最近变化 "+trendLabel(m.delta,true)+"。"});
-   if(m.n>=15&&d.n>=20&&m.p>=85&&d.p>=85)out.push({level:"keep",title:s.name+"：当前较稳定",text:"不需要继续堆大量同类题。保持低频保温，把训练资源让给更弱模块；每周用一小组限时题或整卷中的该模块检查是否退步。",evidence:"模考 "+fmtPct(m.p)+"；专项 "+fmtPct(d.p)+"。"});
+   var m=s.m,d=s.d,level="keep",title="",text="",evidence="模考 "+fmtPct(m.p)+"；专项 "+fmtPct(d.p)+"。";
+   if(!m.n&&!d.n){
+     level="medium";title=s.name+"：数据不足，先建立基线";
+     text="当前范围没有足够记录。下一次专项或模考请完整记录作答、做对和耗时，至少连续2—3次后再判断趋势。 "+strategies[s.name];
+   }else if(m.n>=10&&d.n>=10&&m.p<75&&d.p>=82){
+     level="high";title=s.name+"：专项会做，但模考没有兑现";
+     text="减少纯同类刷题，把训练改成10—20题混合限时，重点复盘“识别题型、切换顺序、超时跳题”。下一次模考只验证这一项。 "+strategies[s.name];
+   }else if(m.n+d.n>=15&&((Number.isFinite(m.p)&&m.p<72)||(Number.isFinite(d.p)&&d.p<72))){
+     level="high";title=s.name+"：正确率仍是首要矛盾";
+     text="暂时不要继续追求更快速度。用小组题训练方法稳定性，错题标记为知识点、审题、计算、推理链或时间压力，再针对最高频错因复练。 "+strategies[s.name];
+   }else if((m.items.length>=2&&Number.isFinite(m.delta)&&m.delta<-6)||(d.items.length>=2&&Number.isFinite(d.delta)&&d.delta<-6)){
+     level="high";title=s.name+"：近期表现出现回落";
+     text="优先回看最近两次记录，比较题型构成、错误类型和单题用时。如果正确率下降同时速度变快，先放宽时间，把稳定性恢复后再压时。 "+strategies[s.name];
+     evidence+=" 模考变化 "+trendLabel(m.delta,true)+"；专项变化 "+trendLabel(d.delta,true)+"。";
+   }else if(m.n>=15&&d.n>=20&&m.p>=85&&d.p>=85){
+     level="keep";title=s.name+"：当前较稳定";
+     text="减少同类题堆量，保持低频保温，把训练资源让给更弱模块；每周用一小组限时题或整卷检查是否退步。 "+strategies[s.name];
+   }else{
+     level="medium";title=s.name+"：继续做针对性优化";
+     text=strategies[s.name]+" 当前没有触发明显恶化规则，下一阶段重点看正确率和单题用时能否同时改善。";
+   }
+   moduleAdvice.push({level:level,title:title,text:text,evidence:evidence,module:s.name});
  });
- var subs=subStats(rows).filter(function(x){return (x.mock.n+x.drill.n)>=8}).sort(function(a,b){var aa=Number.isFinite(a.mock.p)&&Number.isFinite(a.drill.p)?Math.min(a.mock.p,a.drill.p):(Number.isFinite(a.mock.p)?a.mock.p:a.drill.p),bb=Number.isFinite(b.mock.p)&&Number.isFinite(b.drill.p)?Math.min(b.mock.p,b.drill.p):(Number.isFinite(b.mock.p)?b.mock.p:b.drill.p);return aa-bb});
- if(subs.length){
-   var s=subs[0],best=Number.isFinite(s.mock.p)?s.mock.p:s.drill.p;
-   if(best<78)out.push({level:"medium",title:s.parent+" · "+s.name+"：子模块优先补弱",text:"安排2组10—15题的小样本专项，第一组不压时间确认方法，第二组再限时；之后回到混合题或整卷，验证能否在不提示题型的情况下正确识别。",evidence:"模考 "+fmtPct(s.mock.p)+"；专项 "+fmtPct(s.drill.p)+"。"});
- }
- if(!out.length)out.push({level:"keep",title:"当前没有明显的单一短板",text:"继续积累样本。下一阶段重点不是增加记录数量，而是保证每次模考和专项都完整记录作答、正确数、用时和子模块标签，这样趋势会更可靠。",evidence:"当前范围内没有触发明显恶化或低正确率规则。"});
- var priority={high:0,medium:1,keep:2};out.sort(function(a,b){return priority[a.level]-priority[b.level]});
- return out.slice(0,8);
+
+ // 言语和判断各补一条最弱子模块建议，避免只看到大模块结论。
+ var allSubs=subStats(rows),subAdvice=[];
+ ["言语理解","判断推理"].forEach(function(parent){
+   var list=allSubs.filter(function(x){return x.parent===parent&&(x.mock.n+x.drill.n)>=4}).sort(function(a,b){
+     var aa=Number.isFinite(a.mock.p)&&Number.isFinite(a.drill.p)?Math.min(a.mock.p,a.drill.p):(Number.isFinite(a.mock.p)?a.mock.p:a.drill.p),
+         bb=Number.isFinite(b.mock.p)&&Number.isFinite(b.drill.p)?Math.min(b.mock.p,b.drill.p):(Number.isFinite(b.mock.p)?b.mock.p:b.drill.p);
+     return aa-bb;
+   });
+   if(!list.length)return;
+   var s=list[0],base=Number.isFinite(s.mock.p)?s.mock.p:s.drill.p;
+   if(!Number.isFinite(base))return;
+   subAdvice.push({
+     level:base<75?"high":"medium",
+     title:parent+" · "+s.name+"：子模块重点跟踪",
+     text:"把这个标签单独保留为本周重点：先做1组不压时确认方法，再做1组限时；随后回到混合题或整卷，验证在没有题型提示时能否保持正确率和速度。",
+     evidence:"模考 "+fmtPct(s.mock.p)+"；专项 "+fmtPct(s.drill.p)+"；模考用时 "+fmtPace(s.mock.pace)+"；专项用时 "+fmtPace(s.drill.pace)+"。"
+   });
+ });
+
+ var priority={high:0,medium:1,keep:2};
+ moduleAdvice.sort(function(a,b){return priority[a.level]-priority[b.level]||MODULES.indexOf(a.module)-MODULES.indexOf(b.module)});
+ subAdvice.sort(function(a,b){return priority[a.level]-priority[b.level]});
+ return moduleAdvice.concat(subAdvice).slice(0,8);
 }
 function renderAdvice(rows){
  var arr=buildAdvice(rows);
