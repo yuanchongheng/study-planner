@@ -120,7 +120,7 @@
   <div class="cloud-login" id="cloudLogin"><div class="cloud-fields"><label>登录邮箱<input type="email" id="cloudEmail" autocomplete="email" placeholder="你的邮箱"></label><label>登录密码（至少6位）<input type="password" id="cloudPassword" autocomplete="current-password" placeholder="用于本网页的账号密码"></label></div><div class="cloud-buttons"><button type="button" class="btn dark" id="cloudSignIn">登录并同步</button><button type="button" class="btn ghost" id="cloudSignUp">首次使用 · 注册</button></div><p class="cloud-help">注册后如收到验证邮件，请先点击验证链接，再回到网页登录。密码不会保存在本网页的任务数据中。</p></div>
   <div id="cloudLogged" class="cloud-logged hidden"><span id="cloudIdentity"></span><div class="cloud-buttons"><button type="button" class="btn purple" id="cloudSyncNow">立即同步</button><button type="button" class="btn ghost" id="cloudResolve">解决同步冲突</button><button type="button" class="btn ghost" id="cloudLogout">退出账号</button></div></div>
   <p class="cloud-help" id="cloudHint">备份依然重要：云端是同步工具，不等同于历史版本备份。跨设备尽量避免同时改同一批任务。</p>
-</section><section id="notionPanel" class="notion-panel" aria-labelledby="notionTitle"><div class="notion-head"><div><div class="cloud-kicker">NOTION CALENDAR / 单向日历发布</div><h2 id="notionTitle">让你的学习时间，出现在 Notion Calendar。</h2><p>网页是唯一编辑入口：任务名称、学习目标、时间及勾选状态可同步至 Notion。云端保存成功后自动尝试同步当前日期；其他日期可手动批量发布。</p></div><span id="notionStatus" class="notion-badge warn" role="status" aria-live="polite">待开通</span></div><div class="notion-actions"><button class="btn dark" type="button" id="notionToday">↗ 同步当前日期</button><button class="btn purple" type="button" id="notionWeek">▦ 同步从当前日期起7天</button><a class="btn" href="https://calendar.notion.so" target="_blank" rel="noopener noreferrer">打开 Notion Calendar ↗</a></div><p id="notionMessage" class="notion-detail">先按部署包里的《配置指南》创建 Notion 数据库和 Supabase Edge Function。网页不会保存 Notion 令牌。</p><p class="notion-quiet">仅同步时间表任务，不上传行测成绩、申论答案、考博成绩或备考笔记。默认北京时间（UTC+08:00）。这是网页 → Notion 单向同步，在日历中修改不会回写网页，下一次同步可能覆盖日历端修改。</p></section><section class="hero" id="overview"><div class="eyebrow">ONE TIMETABLE · TWO GOALS</div><h1>考公稳步冲刺，<br>考博从十月开始。</h1><p>已经刷完的行测题本不再重复堆量：首段40题 / 75分钟，申论与数量继续补齐。10月1日起每天先保证考公有效学习严格超过6.5小时，再额外加入50分钟三高；国考结束后切换三高主攻。</p><div class="hero-pills"><span class="pill">9月 · 考公优先</span><span class="pill">9月26日 · 首场行测整卷</span><span class="pill">9月27日 · 首场申论整卷</span><span class="pill">10月 · 考公 ＞6.5小时＋三高50分钟</span><span class="pill">国考后 · 三高主攻</span><span class="pill">2027年3月 · 个人目标</span></div><div class="hero-actions"><a class="btn dark" href="#daily">查看合并时间表 ↗</a><a class="btn" href="#phdLog">填写考博摸底 ↗</a></div><div class="hero-number"><b id="heroDay">—</b><small id="heroMonth">2026</small></div></section>
+</section><section id="notionPanel" class="notion-panel" aria-labelledby="notionTitle"><div class="notion-head"><div><div class="cloud-kicker">NOTION CALENDAR / 双向日历同步</div><h2 id="notionTitle">让网页日历和 Notion Calendar，共用一套任务。</h2><p>网页与 Notion Calendar 都可以编辑：任务名称、学习目标、类别、时间、完成状态和跨日安排会双向合并。若两边同时修改同一任务，会先提示你选择保留哪一边。</p></div><span id="notionStatus" class="notion-badge warn" role="status" aria-live="polite">待开通</span></div><div class="notion-actions"><button class="btn dark" type="button" id="notionToday">↔ 立即双向同步</button><button class="btn purple" type="button" id="notionWeek">▦ 双向同步连续7天</button><a class="btn" href="https://calendar.notion.so" target="_blank" rel="noopener noreferrer">打开 Notion Calendar ↗</a></div><p id="notionMessage" class="notion-detail">双向同步需要新版 Supabase Edge Function。Notion 令牌仍只保存在 Supabase Secrets，不会写入网页或 GitHub。</p><p class="notion-quiet">仅同步时间表任务，不上传行测成绩、申论答案、考博成绩或备考笔记。默认北京时间（UTC+08:00）。支持网页 ↔ Notion 双向修改、跨日任务、日期移动和完成状态同步；同一任务两边同时修改时会提示冲突。</p></section><section class="hero" id="overview"><div class="eyebrow">ONE TIMETABLE · TWO GOALS</div><h1>考公稳步冲刺，<br>考博从十月开始。</h1><p>已经刷完的行测题本不再重复堆量：首段40题 / 75分钟，申论与数量继续补齐。10月1日起每天先保证考公有效学习严格超过6.5小时，再额外加入50分钟三高；国考结束后切换三高主攻。</p><div class="hero-pills"><span class="pill">9月 · 考公优先</span><span class="pill">9月26日 · 首场行测整卷</span><span class="pill">9月27日 · 首场申论整卷</span><span class="pill">10月 · 考公 ＞6.5小时＋三高50分钟</span><span class="pill">国考后 · 三高主攻</span><span class="pill">2027年3月 · 个人目标</span></div><div class="hero-actions"><a class="btn dark" href="#daily">查看合并时间表 ↗</a><a class="btn" href="#phdLog">填写考博摸底 ↗</a></div><div class="hero-number"><b id="heroDay">—</b><small id="heroMonth">2026</small></div></section>
 <div class="notice"><strong>时间说明：</strong>9月19—20日先做专项、申论小题和错题复盘；9月26日（周六）开始行测整卷，9月27日（周日）开始申论整卷；三高从 <b>2026年10月1日</b> 开始，不提前安排；下方的“转入三高主攻日期”是可修改的个人计划占位，不代表已公布的国考日期。南开2027年度的招生批次、考核内容及资格以官方公告为准，研究计划与申请材料不能等到3月才准备。 <a target="_blank" rel="noopener noreferrer" href="https://economics.nankai.edu.cn/zsgz/list.htm">南开经济学院招生信息 ↗</a></div>
 <div class="stats" aria-label="学习统计"><div class="stat"><div class="stat-top">当天已完成任务 <em>✓</em></div><div class="stat-num" id="doneCount">0 <small>/ 0</small></div><div class="stat-desc" id="doneDesc">按选定日期和时间表统计</div><div class="bar"><span id="doneBar"></span></div></div><div class="stat"><div class="stat-top">已勾选任务时长 <em>◷</em></div><div class="stat-num" id="hoursCount">0 <small>小时</small></div><div class="stat-desc">按当前安排时长汇总已勾选任务</div></div><div class="stat"><div class="stat-top">行测模考记录 <em>▤</em></div><div class="stat-num" id="civilCount">0 <small>次</small></div><div class="stat-desc">成绩、正确率与耗时可追踪</div></div><div class="stat"><div class="stat-top">三高学习记录 <em>∑</em></div><div class="stat-num" id="phdCount">0 <small>条</small></div><div class="stat-desc" id="phaseCaption">当前阶段：考公主攻</div></div></div>
 
@@ -435,7 +435,7 @@ function renderDay(){
  renderCalendar();
  $('civilCount').innerHTML=`${state.civilMocks.length} <small>次</small>`;$('phdCount').innerHTML=`${state.phdLogs.length} <small>条</small>`;renderDailyGoals();renderStudyTime()
 }
-function setDate(v){if(!/^\d{4}-\d{2}-\d{2}$/.test(v)||Number.isNaN(dateObj(v).getTime()))return;editingTaskId=null;editingGoalId=null;closeAddTask();closeCopyDay();selected=v;$('civilDate').value=v;$('drillDate').value=v;$('essayDate').value=v;$('phdDate').value=v;renderDay()}
+function setDate(v){if(!/^\d{4}-\d{2}-\d{2}$/.test(v)||Number.isNaN(dateObj(v).getTime()))return;editingTaskId=null;editingGoalId=null;closeAddTask();closeCopyDay();selected=v;$('civilDate').value=v;$('drillDate').value=v;$('essayDate').value=v;$('phdDate').value=v;renderDay();window.__notionDateChanged?.(v)}
 
 $('goalAddForm').addEventListener('submit',e=>{e.preventDefault();let title=$('goalTitleInput').value.trim();if(!title)return;state.dailyGoals=state.dailyGoals||{};state.dailyGoals[selected]=goalsFor().slice();state.dailyGoals[selected].push({id:uid(),title:title.slice(0,120),progress:0,createdAt:Date.now()});$('goalTitleInput').value='';save();renderDailyGoals();toast('每日目标已添加。')});
 $('goalList').addEventListener('input',e=>{let r=e.target.closest('[data-goal-range]'),n=e.target.closest('[data-goal-number]'),fd=e.target.closest('[data-goal-fraction-done]'),ft=e.target.closest('[data-goal-fraction-total]');if(r||n){let el=r||n,id=el.dataset.goalRange||el.dataset.goalNumber,p=Math.max(0,Math.min(100,Number(el.value)||0)),row=el.closest('[data-goal-row]'),peer=row?.querySelector(r?'[data-goal-number]':'[data-goal-range]');if(peer)peer.value=p;let fill=row?.querySelector('.goal-progress-fill');if(fill)fill.style.width=p+'%';let g=goalsFor().find(x=>String(x.id)===String(id));if(g){g.progress=p;delete g.fractionDone;delete g.fractionTotal}let fr=row?.querySelector('[data-goal-fraction-row]');if(fr){fr.querySelector('[data-goal-fraction-done]').value='';fr.querySelector('[data-goal-fraction-total]').value='';fr.classList.remove('invalid');fr.querySelector('.goal-fraction-result').textContent=goalFractionText('','')}$('goalTodayPct').textContent=(goalPct(selected)??0).toFixed(0)+'%';return}if(fd||ft){let el=fd||ft,id=el.dataset.goalFractionDone||el.dataset.goalFractionTotal,row=el.closest('[data-goal-row]'),done=row?.querySelector('[data-goal-fraction-done]')?.value??'',total=row?.querySelector('[data-goal-fraction-total]')?.value??'',p=goalFractionPct(done,total),g=goalsFor().find(x=>String(x.id)===String(id));if(g){if(done==='')delete g.fractionDone;else g.fractionDone=Number(done);if(total==='')delete g.fractionTotal;else g.fractionTotal=Number(total);if(p!==null)g.progress=p}let fr=row?.querySelector('[data-goal-fraction-row]');if(fr){fr.classList.toggle('invalid',(done!==''||total!=='')&&p===null);fr.querySelector('.goal-fraction-result').textContent=goalFractionText(done,total)}if(p!==null){let rr=row?.querySelector('[data-goal-range]'),nn=row?.querySelector('[data-goal-number]'),fill=row?.querySelector('.goal-progress-fill');if(rr)rr.value=p;if(nn)nn.value=Number(p.toFixed(1));if(fill)fill.style.width=p+'%';$('goalTodayPct').textContent=(goalPct(selected)??0).toFixed(0)+'%'}}});
@@ -648,72 +648,76 @@ setInterval(()=>{if(cloudAuth&&cloudInitialized){if(cloudDirty&&!cloudConflict&&
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&cloudAuth&&cloudInitialized){if(cloudDirty&&!cloudConflict)cloudWrite();else cloudRead()}});
 
 
-/* Notion one-way publisher. The token/database ID live ONLY in the Supabase Edge Function secrets. */
-const notionSig=new Map();let notionBusy=false,notionAutoTimer=null;
-function notionStatus(message,kind='warn'){const el=$('notionStatus');el.textContent=message;el.className='notion-badge '+kind;}
-function notionMessage(message){$('notionMessage').textContent=message;}
-function notionPayload(date){
-  const old=selected,had=Object.prototype.hasOwnProperty.call(state.days,date);
-  selected=date;
+/* Notion Calendar two-way sync bridge. Secrets stay in Supabase Edge Function. */
+const NOTION_MODES=new Set(['routine','mock','essay','phd','busy']);
+function notionSnapshot(date){
+  const old=selected,had=Object.prototype.hasOwnProperty.call(state.days,date);selected=date;
   try{
-    const day=getDay();
-    return {date,revision:remoteRevision,tasks:tasks().map(t=>{
-      const [start,end]=t.time.split('—'),span=timeSpan(t.time),endDate=span?.cross?iso(new Date(dateObj(date).getTime()+86400000)):date;return {id:t.id,title:t.title,description:t.description,cat:t.cat,start,end,endDate,crossDay:!!span?.cross,done:!!day.checked?.[t.id]};
-    })};
-  }finally{selected=old;if(!had)delete state.days[date];}
+    const day=getDay(),mode=actualMode();
+    return {date,mode,tasks:tasks().map(t=>({...t,done:!!day.checked?.[t.id]}))};
+  }finally{selected=old;if(!had)delete state.days[date]}
 }
-async function notionSyncDate(date,manual=false){
-  if(!cloudConfig||!cloudAuth||!cloudInitialized||cloudDirty||cloudConflict||remoteRevision===null){
-    if(manual)notionMessage('请先登录 Supabase，等待云端显示「已同步」，再同步 Notion；有同步冲突请先解决。');
-    return false;
-  }
-  const payload=notionPayload(date),crossDay=payload.tasks.filter(t=>t.crossDay),signature=JSON.stringify(payload.tasks);if(crossDay.length){notionStatus('含跨日任务 · 暂未发布','warn');notionMessage(`${date} 有 ${crossDay.length} 项跨日任务。网页与 Supabase 会正常保存，但当前 Notion Edge Function 还未升级到“次日结束”，为避免日历时间错误，本次 Notion 发布已跳过。`);return false}
-  if(!manual&&notionSig.get(date)===signature)return true;
+function notionRemoveLocal(date,id,modeHint=''){
+  if(!id)return false;
+  const old=selected,had=Object.prototype.hasOwnProperty.call(state.days,date);selected=date;
   try{
-    await cloudEnsureToken();
-    const base=cloudConfig.url.replace(/\/+$/,'');
-    const response=await fetch(base+'/functions/v1/notion-calendar-sync',{
-      method:'POST',headers:{'Content-Type':'application/json','apikey':cloudConfig.key,'Authorization':'Bearer '+cloudAuth.access_token},
-      body:JSON.stringify(payload),cache:'no-store'
-    });
-    let data;try{data=await response.json()}catch{data={}};
-    if(!response.ok)throw Error(data.error||data.message||`HTTP ${response.status}：请检查函数部署、Notion数据库授权及Secrets`);
-    notionSig.set(date,signature);notionStatus('最近同步成功','');
-    notionMessage(`${date} 已同步：新建 ${data.created||0}、更新 ${data.updated||0}、归档 ${data.archived||0}，未变 ${data.unchanged||0}。${data.note||''}`);
-    return true;
-  }catch(error){notionStatus('Notion 同步失败','error');notionMessage(`${date} 同步失败：${error.message}。原备考网页及 Supabase 学习记录不受影响，可重试。`);return false;}
-}
-$('notionToday').addEventListener('click',async()=>{
-  if(notionBusy)return;
-  notionBusy=true;const btn=$('notionToday');btn.disabled=true;notionStatus('发布中…','warn');
-  try{if(cloudDirty&&!cloudConflict)await cloudWrite();await notionSyncDate(selected,true)}finally{notionBusy=false;btn.disabled=false;}
-});
-$('notionWeek').addEventListener('click',async()=>{
-  if(notionBusy)return;
-  if(!confirm('将从当前选定日期开始，向 Notion 发布连续7天的任务。已同步任务会更新；从网页移除的任务会在 Notion 中归档。确定继续吗？'))return;
-  notionBusy=true;const btn=$('notionWeek');btn.disabled=true;notionStatus('批量发布中…','warn');
-  let count=0;try{
-    if(cloudDirty&&!cloudConflict)await cloudWrite();
-    const start=dateObj(selected);
-    for(let i=0;i<7;i++){
-      const next=new Date(start);next.setDate(start.getDate()+i);
-      const date=iso(next);notionMessage(`正在同步第 ${i+1}/7 天：${date}……`);
-      if(!(await notionSyncDate(date,true)))break;
-      count++;await new Promise(resolve=>setTimeout(resolve,450));
+    const day=getDay(),mode=NOTION_MODES.has(modeHint)?modeHint:actualMode();
+    if(id.startsWith('custom_')){
+      day.extraTasks=day.extraTasks||{};
+      const before=safeArray(day.extraTasks[mode]),after=before.filter(x=>x.id!==id);
+      if(before.length===after.length){
+        for(const key of Object.keys(day.extraTasks)){const list=safeArray(day.extraTasks[key]),next=list.filter(x=>x.id!==id);if(next.length!==list.length){day.extraTasks[key]=next;break}}
+      }else day.extraTasks[mode]=after;
+    }else{
+      day.hiddenTasks=day.hiddenTasks||{};
+      day.hiddenTasks[mode]=[...new Set([...safeArray(day.hiddenTasks[mode]),id])];
     }
-    if(count===7){notionStatus('7天同步完成','');notionMessage('7天同步完成：请在 Notion Calendar 中添加该数据库后查看。后续修改当天任务会在云端保存后自动同步。');}
-    else notionMessage(`已完成 ${count}/7 天。请依据上方状态检查并重试剩余日期。`);
-  }finally{notionBusy=false;btn.disabled=false;}
-});
-window.__notionCloudSaved=()=>{
-  const day=selected;clearTimeout(notionAutoTimer);
-  async function flush(){
-    if(day!==selected||cloudDirty||cloudConflict||!cloudInitialized)return;
-    if(notionBusy){notionAutoTimer=setTimeout(flush,1200);return;}
-    notionBusy=true;notionStatus('自动同步中…','warn');
-    try{await notionSyncDate(day)}finally{notionBusy=false;}
-  }
-  notionAutoTimer=setTimeout(flush,1300);
+    if(day.checked)delete day.checked[id];
+    for(const key of Object.keys(day.timeOverrides||{}))if(day.timeOverrides[key])delete day.timeOverrides[key][id];
+    for(const key of Object.keys(day.taskOverrides||{}))if(day.taskOverrides[key])delete day.taskOverrides[key][id];
+    return true;
+  }finally{selected=old;if(!had&&state.days[date]&&Object.keys(state.days[date]).length===0)delete state.days[date]}
+}
+function notionUpsertLocal(date,localId,modeHint,t){
+  const old=selected,had=Object.prototype.hasOwnProperty.call(state.days,date);selected=date;
+  try{
+    const day=getDay(),mode=actualMode(),time=`${t.start}—${t.end}`;
+    let id=localId||'',current=id?tasks().find(x=>x.id===id):null;
+    if(current&&id.startsWith('custom_')){
+      day.extraTasks=day.extraTasks||{};day.extraTasks[mode]=safeArray(day.extraTasks[mode]);
+      let entry=day.extraTasks[mode].find(x=>x.id===id);
+      if(!entry){
+        for(const key of Object.keys(day.extraTasks)){entry=safeArray(day.extraTasks[key]).find(x=>x.id===id);if(entry)break}
+      }
+      if(entry){entry.time=time;entry.title=t.title;entry.description=t.description;entry.cat=CAT_VALUES.includes(t.cat)?t.cat:'civil';entry.minutes=timeSpan(time)?.minutes||30}
+      else current=null;
+    }
+    if(current&&!id.startsWith('custom_')){
+      day.taskOverrides=day.taskOverrides||{};day.taskOverrides[mode]=day.taskOverrides[mode]||{};
+      day.taskOverrides[mode][id]={title:t.title,description:t.description,cat:CAT_VALUES.includes(t.cat)?t.cat:'civil'};
+      day.timeOverrides=day.timeOverrides||{};day.timeOverrides[mode]=day.timeOverrides[mode]||{};
+      day.timeOverrides[mode][id]={start:t.start,end:t.end};
+      if(day.hiddenTasks?.[mode])day.hiddenTasks[mode]=safeArray(day.hiddenTasks[mode]).filter(x=>x!==id);
+    }
+    if(!current){
+      id='custom_'+uid();day.extraTasks=day.extraTasks||{};day.extraTasks[mode]=safeArray(day.extraTasks[mode]);
+      day.extraTasks[mode].push(task(id,time,t.title,t.description,CAT_VALUES.includes(t.cat)?t.cat:'civil'));
+    }
+    day.checked=day.checked||{};if(t.done)day.checked[id]=true;else delete day.checked[id];
+    return {localId:id,mode};
+  }finally{selected=old;if(!had&&state.days[date]&&Object.keys(state.days[date]).length===0)delete state.days[date]}
+}
+window.__notionBridge={
+  state:()=>state,
+  selected:()=>selected,
+  timeSpan,
+  snapshot:notionSnapshot,
+  remove:notionRemoveLocal,
+  upsert:notionUpsertLocal,
+  commit:()=>{save();renderAll()},
+  cloud:()=>({configured:!!cloudConfig,loggedIn:!!cloudAuth,initialized:cloudInitialized,dirty:cloudDirty,conflict:cloudConflict,remoteRevision}),
+  authContext:async()=>{await cloudEnsureToken();return {base:cloudConfig.url.replace(/\/+$/,''),key:cloudConfig.key,token:cloudAuth.access_token}},
+  flushCloud:async()=>{await cloudWrite()}
 };
 
 
@@ -838,4 +842,4 @@ $('calendarUndo').addEventListener('click',()=>{
 
 renderAll();renderNowLine();setInterval(renderNowLine,30000);if(!savePossible)toast('当前浏览器可能不支持自动保存，请定期导出备份。');
 })();
-</script></body></html>
+</script><script src="./notion-sync-v2.js"></script></body></html>
