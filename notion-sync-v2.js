@@ -26,9 +26,10 @@ html,body{height:100%;overflow:hidden!important;background:#fff!important}
 `:''}
 `;
 document.head.appendChild(colorStyle);
-const V='20261004-0180';
+const V='20261004-0190';
 const load=src=>new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=src+(src.includes('?')?'&':'?')+'v='+V;s.onload=resolve;s.onerror=reject;document.head.appendChild(s)});
 load('./notion-sync-core-v2.js').catch(()=>{});
-if(calendarMode)load('./google-calendar-planner.js').catch(()=>{});
-else load('./today-home.js').catch(()=>{});
+if(calendarMode){
+ load('./google-calendar-planner.js').then(()=>load('./google-calendar-polish.js')).catch(()=>{});
+}else load('./today-home.js').catch(()=>{});
 })();
