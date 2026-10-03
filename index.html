@@ -180,6 +180,68 @@ body{
 @media(max-width:1150px){.topbar{margin:0}.content{padding-left:25px;padding-right:25px}}
 @media(max-width:730px){.topbar{position:static;background:transparent;backdrop-filter:none}.task{border-radius:13px}.head{padding-left:10px}}
 /* UI POLISH V3 END */
+
+/* SIDEBAR LIGHT V1 START */
+.sidebar{
+  color:#263753!important;
+  background:
+    radial-gradient(circle at 8% 0%,rgba(123,107,224,.16),transparent 26%),
+    radial-gradient(circle at 100% 78%,rgba(107,199,166,.13),transparent 34%),
+    linear-gradient(180deg,#f4f5fb 0%,#eef2f8 48%,#f8f9fc 100%)!important;
+  border-right:1px solid #dfe4ed;
+  box-shadow:10px 0 30px rgba(35,49,77,.05)!important;
+}
+.brand{margin:0 6px 29px!important;padding:5px 3px 17px;border-bottom:1px solid rgba(118,131,155,.17)}
+.mark{
+  color:#263650!important;
+  background:linear-gradient(145deg,#c9f4df 0%,#afe9d4 58%,#cbc5ff 150%)!important;
+  border:1px solid rgba(255,255,255,.95);
+  box-shadow:0 10px 26px rgba(66,137,115,.15),inset 0 1px 0 rgba(255,255,255,.95)!important;
+}
+.brand b{color:#24344f!important;letter-spacing:.2px}
+.brand small{color:#718098!important;letter-spacing:1.35px}
+.side-label{color:#8792a6!important;font-weight:800;letter-spacing:1.65px;margin-bottom:11px!important}
+.sidebar nav{gap:5px!important}
+.sidebar nav a{
+  color:#5b6980!important;
+  border:1px solid transparent!important;
+  border-radius:12px!important;
+  padding:11px 12px!important;
+  transition:.16s ease!important;
+}
+.sidebar nav a span{color:#8c88ce!important;min-width:19px;font-size:9px!important}
+.sidebar nav a:hover{
+  color:#34445e!important;
+  background:rgba(255,255,255,.66)!important;
+  border-color:#e0e5ee!important;
+  box-shadow:0 5px 15px rgba(42,58,88,.045)!important;
+  transform:translateX(2px)!important;
+}
+.sidebar nav a.active{
+  color:#2e3d58!important;
+  background:linear-gradient(100deg,#fff 0%,#f9fbff 100%)!important;
+  border-color:#d9e0ea!important;
+  box-shadow:0 8px 22px rgba(45,61,93,.075),inset 4px 0 0 #82cdb3!important;
+}
+.sidebar nav a.active span{color:#277e67!important}
+.side-foot{
+  color:#34445f!important;
+  border:1px solid #d9e0eb!important;
+  background:
+    radial-gradient(circle at 92% 10%,rgba(116,101,221,.12),transparent 34%),
+    linear-gradient(145deg,rgba(255,255,255,.90),rgba(241,246,250,.96))!important;
+  border-radius:18px!important;
+  box-shadow:0 9px 26px rgba(42,58,88,.055)!important;
+}
+.side-foot strong{color:#2a3a55!important}
+.side-foot p{color:#6e7b90!important}
+@media(max-width:730px){
+  .sidebar{border-right:0;border-bottom:1px solid #dfe4ed;box-shadow:0 8px 22px rgba(34,48,75,.045)!important}
+  .brand{border-bottom:0;margin-bottom:9px!important;padding-bottom:2px}
+  .sidebar nav a{background:rgba(255,255,255,.52)!important;border-color:#e2e6ee!important}
+  .sidebar nav a.active{background:#fff!important}
+}
+/* SIDEBAR LIGHT V1 END */
 </style><style>
 .cloud-panel{margin:0 0 20px;padding:24px 27px;border:1px solid #dddff7;border-radius:20px;background:linear-gradient(115deg,#ffffff,#f0f0ff);box-shadow:0 12px 30px #172d4c09}.cloud-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap}.cloud-kicker{font-size:10px;color:#7265ce;font-weight:900;letter-spacing:1.5px}.cloud-head h2{margin:7px 0;font-size:21px;line-height:1.4}.cloud-head p,.cloud-help{font-size:11px;color:#6e7890;line-height:1.85;margin:6px 0 12px}.cloud-status{border-radius:25px;padding:8px 13px;background:#fff;color:#795f9c;font-weight:800;font-size:11px;white-space:nowrap}.cloud-status.ok{color:#16836b;background:#dff6e9}.cloud-status.warn{color:#a76b16;background:#fff1d6}.cloud-details{background:#ffffffa6;border:1px solid #ececf9;border-radius:12px;padding:12px 14px;margin:13px 0}.cloud-details summary{cursor:pointer;color:#424678;font-weight:800;font-size:12px}.cloud-details summary span{font-weight:400;color:#858da2;margin-left:8px}.cloud-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:12px 0}.cloud-fields label{font-size:11px;color:#586782;font-weight:750;display:grid;gap:6px}.cloud-fields input{border:1px solid #dce2ee;border-radius:9px;min-height:40px;padding:10px;width:100%;min-width:0;font-size:13px;background:#fff}.cloud-buttons{display:flex;gap:9px;flex-wrap:wrap}.cloud-login{padding-top:5px}.cloud-logged{display:flex;flex-direction:column;gap:12px;padding:12px 0}.cloud-logged span{font-weight:750;font-size:12px;overflow-wrap:anywhere}.cloud-panel .hidden{display:none!important}@media(max-width:650px){.cloud-panel{padding:18px 15px}.cloud-fields{grid-template-columns:1fr}.cloud-head h2{font-size:19px}.cloud-buttons .btn{flex:1}}
 </style><style>
