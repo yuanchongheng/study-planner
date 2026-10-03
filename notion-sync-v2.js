@@ -14,17 +14,19 @@ colorStyle.textContent=`
 ${calendarMode?`
 html,body{height:100%;overflow:hidden!important;background:#fff!important}
 .app{display:block!important;min-height:100vh!important}
-.sidebar,.topbar,.today-home,.stats,.notice,#dailyGoals,#civil,#drill,#essay,#phd,#phdLog,#application,#roadmap,#settings{display:none!important}
+.sidebar{display:none!important}
 .content{padding:0!important;margin:0!important;max-width:none!important;width:100%!important;height:100vh!important}
-#daily{display:block!important;margin:0!important;height:100vh!important;overflow:hidden!important}
-#daily>.head,#daily>.daily-grid{display:none!important}
+.content>*:not(#daily){display:none!important}
+.content>#daily{display:block!important;margin:0!important;height:100vh!important;overflow:hidden!important}
+#daily>*:not(.gcal-planner){display:none!important}
+#daily>.gcal-planner{display:flex!important}
 .gcal-planner{margin:0!important;border:0!important;border-radius:0!important;box-shadow:none!important;height:100vh!important;display:flex!important;flex-direction:column!important}
 .gcal-scroll{max-height:none!important;height:auto!important;flex:1!important;min-height:0!important}
 .gcal-help{flex:0 0 auto!important}
 `:''}
 `;
 document.head.appendChild(colorStyle);
-const V='20261004-0170';
+const V='20261004-0180';
 const load=src=>new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=src+(src.includes('?')?'&':'?')+'v='+V;s.onload=resolve;s.onerror=reject;document.head.appendChild(s)});
 load('./notion-sync-core-v2.js').catch(()=>{});
 if(calendarMode)load('./google-calendar-planner.js').catch(()=>{});
