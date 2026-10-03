@@ -1,4 +1,12 @@
 (()=>{'use strict';
+const hero=document.getElementById('overview');
+if(hero){hero.classList.add('hidden');hero.setAttribute('aria-hidden','true')}
+const notice=document.querySelector('.notice');
+if(notice){notice.classList.add('hidden');notice.setAttribute('aria-hidden','true')}
+document.querySelector('.side-foot')?.remove();
+})();
+
+(()=>{'use strict';
 const READY_KEY='dual-notion-v2-ready';
 const SERVER_MODE='two-way-v2';
 function setup(bridge){
