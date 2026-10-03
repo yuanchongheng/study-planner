@@ -7,4 +7,5 @@ document.querySelector('.side-foot')?.remove();
 const load=src=>new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=src;s.onload=resolve;s.onerror=reject;document.head.appendChild(s)});
 load('./notion-sync-core-v2.js').catch(()=>{});
 load('./weekly-planner.js').catch(()=>{});
+load('./today-home.js').catch(()=>{});
 })();
