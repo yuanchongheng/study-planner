@@ -26,13 +26,14 @@ html,body{height:100%;overflow:hidden!important;background:#fff!important}
 `:''}
 `;
 document.head.appendChild(colorStyle);
-const V='20261004-0200';
+const V='20261004-0210';
 const load=src=>new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=src+(src.includes('?')?'&':'?')+'v='+V;s.onload=resolve;s.onerror=reject;document.head.appendChild(s)});
 load('./notion-sync-core-v2.js').catch(()=>{});
 if(calendarMode){
  load('./google-calendar-planner.js')
   .then(()=>load('./google-calendar-polish.js'))
   .then(()=>load('./google-calendar-rounding.js'))
+  .then(()=>load('./google-calendar-persistence.js'))
   .catch(()=>{});
 }else load('./today-home.js').catch(()=>{});
 })();
