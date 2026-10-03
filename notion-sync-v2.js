@@ -21,12 +21,13 @@ if(calendarMode){
  `;
  document.head.appendChild(s);
 }
-const V='20261004-0230';
+const V='20261004-0240';
 const load=src=>new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=src+(src.includes('?')?'&':'?')+'v='+V;s.onload=resolve;s.onerror=reject;document.head.appendChild(s)});
 load('./notion-sync-core-v2.js').catch(()=>{});
 if(calendarMode){
  load('./google-calendar-planner.js')
   .then(()=>load('./google-calendar-shell-v2.js'))
+  .then(()=>load('./calendar-color-lock.js'))
   .catch(()=>{});
 }else load('./today-home.js').catch(()=>{});
 })();
