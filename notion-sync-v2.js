@@ -24,7 +24,7 @@ html,body{height:100%;overflow:hidden!important;background:#fff!important}
 `:''}
 `;
 document.head.appendChild(colorStyle);
-const V='20261004-0160';
+const V='20261004-0170';
 const load=src=>new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=src+(src.includes('?')?'&':'?')+'v='+V;s.onload=resolve;s.onerror=reject;document.head.appendChild(s)});
 load('./notion-sync-core-v2.js').catch(()=>{});
 if(calendarMode)load('./google-calendar-planner.js').catch(()=>{});
