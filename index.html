@@ -54,6 +54,132 @@
 .cal-event{padding-right:50px}.calendar-event .cal-delete,.calendar-event .cal-copy{position:absolute;top:4px;width:21px;height:21px;border-radius:7px;background:#131a28;font-size:14px;line-height:17px;font-weight:bold;cursor:pointer;z-index:4;touch-action:manipulation;box-shadow:0 3px 9px #04081140;display:grid;place-items:center;padding:0}.calendar-event .cal-delete{right:4px;border:1px solid #424b6d;color:#ffc3ce}.calendar-event .cal-copy{right:29px;border:1px solid #435374;color:#c7d8ff}.calendar-event .cal-delete:hover,.calendar-event .cal-delete:focus-visible{background:#371825;border-color:#b35b76;outline:2px solid #65476c}.calendar-event .cal-copy:hover,.calendar-event .cal-copy:focus-visible{background:#1d2e4b;border-color:#6687bf;outline:2px solid #4b628d}
 .calendar-event.compact .cal-delete{height:16px;width:17px;line-height:12px;font-size:12px;top:1px;right:1px}.calendar-event.compact .cal-copy{display:none}.calendar-event.short .cal-copy{height:18px;width:18px;right:24px;top:2px;font-size:12px}.calendar-event.short .cal-delete{height:18px;width:18px;top:2px;font-size:12px}
 @media(max-width:730px){.cal-quick-grid{grid-template-columns:1fr 1fr}.cal-title-field{grid-column:span 2}.cal-quick-actions .btn{flex:1}}
+
+/* UI POLISH V3 START */
+:root{
+  --surface:#ffffff;
+  --surface-soft:#f8f9fd;
+  --surface-tint:#f3f2ff;
+  --line-strong:#dfe4ee;
+  --purple-deep:#5e55c8;
+  --purple-soft:#f0eeff;
+  --mint-soft:#edf8f4;
+  --shadow-soft:0 12px 34px rgba(32,48,78,.07);
+  --shadow-card:0 7px 22px rgba(36,48,78,.055);
+}
+body{
+  background:
+    radial-gradient(circle at 78% -10%,rgba(112,102,223,.10),transparent 30%),
+    radial-gradient(circle at 34% 8%,rgba(35,129,105,.055),transparent 24%),
+    #f5f7fb;
+}
+.sidebar{
+  background:linear-gradient(180deg,#182840 0%,#1a2c45 52%,#16263b 100%);
+  box-shadow:10px 0 34px rgba(17,35,58,.08);
+}
+.mark{
+  background:linear-gradient(145deg,#c3f4db,#9fe4c5);
+  box-shadow:0 8px 24px rgba(56,183,132,.18),inset 0 1px 0 rgba(255,255,255,.8);
+}
+.sidebar nav a{border:1px solid transparent;transition:.18s ease}
+.sidebar nav a:hover{background:#ffffff0d;border-color:#ffffff10;transform:translateX(2px)}
+.sidebar nav a.active{
+  background:linear-gradient(90deg,#ffffff16,#ffffff0a);
+  border-color:#ffffff14;
+  box-shadow:inset 3px 0 0 #b7f3d1;
+}
+.content{max-width:1560px;padding-bottom:90px}
+.topbar{
+  position:sticky;top:0;z-index:8;
+  margin:0 -10px;padding:18px 10px 16px;
+  background:linear-gradient(180deg,rgba(245,247,251,.96),rgba(245,247,251,.82));
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+}
+.btn{transition:transform .16s ease,box-shadow .16s ease,border-color .16s ease,background .16s ease}
+.btn:hover{box-shadow:0 8px 22px rgba(31,49,80,.10);transform:translateY(-1px)}
+.btn.purple{background:linear-gradient(135deg,#756ae4,#6258cf);box-shadow:0 6px 16px rgba(112,102,223,.18)}
+.btn.dark{background:linear-gradient(135deg,#213753,#172940)}
+.hero{
+  border:1px solid rgba(255,255,255,.86);
+  background:
+    radial-gradient(circle at 82% 20%,rgba(255,255,255,.72),transparent 27%),
+    linear-gradient(122deg,#e8e8ff 0%,#f0efff 43%,#e7f5f0 100%);
+  box-shadow:0 20px 58px rgba(35,45,86,.09),inset 0 1px 0 rgba(255,255,255,.9);
+}
+.hero:before{content:'';position:absolute;left:0;top:0;width:5px;height:100%;background:linear-gradient(180deg,#7066df,#8abfae);opacity:.65}
+.hero h1{letter-spacing:-.8px;color:#233149}
+.pill{backdrop-filter:blur(6px);box-shadow:inset 0 1px 0 rgba(255,255,255,.7)}
+.notice{box-shadow:var(--shadow-card);background:rgba(255,255,255,.91)}
+.stat,.panel,.mini-card,.goal-panel,.study-time-panel{
+  border-color:#e4e8f0;
+  box-shadow:var(--shadow-card);
+}
+.stat{position:relative;overflow:hidden;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+.stat:before{content:'';position:absolute;left:0;right:0;top:0;height:3px;background:linear-gradient(90deg,#7066df,#92c9b7);opacity:.7}
+.stat:hover{transform:translateY(-2px);box-shadow:0 13px 31px rgba(30,45,76,.085);border-color:#dce0eb}
+.stat-num{color:#26364f}
+.head{position:relative;padding-left:13px}
+.head:before{content:'';position:absolute;left:0;top:4px;bottom:4px;width:3px;border-radius:4px;background:linear-gradient(180deg,#7066df,#93cbb8)}
+.head h2{letter-spacing:-.25px;color:#223149}
+.panel{background:rgba(255,255,255,.94)}
+.modebox{border:1px solid #e6e9f0;background:linear-gradient(180deg,#fafbfe,#f7f8fc)}
+.field input,.field select,.field textarea,.date-nav input,.modebox select,.edit-field input,.edit-field textarea,.edit-field select{
+  border-color:#dde3ec;background:#fff;box-shadow:inset 0 1px 2px rgba(31,45,70,.018);transition:border-color .16s ease,box-shadow .16s ease;
+}
+.field input:focus,.field select:focus,.field textarea:focus,.date-nav input:focus,.modebox select:focus,.edit-field input:focus,.edit-field textarea:focus,.edit-field select:focus{
+  border-color:#9b93ea;box-shadow:0 0 0 3px rgba(112,102,223,.09);
+}
+.time-row{gap:10px}
+.time-text{color:#67768c;font-weight:800}
+.dot{border-color:#9288eb;box-shadow:0 0 0 4px #f0efff}
+.line{background:linear-gradient(#d9dcef,#e9ebf4)}
+.task{
+  position:relative;
+  border-color:#e7eaf1;background:linear-gradient(180deg,#fff,#fcfcff);
+  border-radius:15px;padding:16px 14px;
+  box-shadow:0 5px 16px rgba(38,48,80,.035);
+  transition:border-color .18s ease,box-shadow .18s ease,transform .18s ease;
+}
+.task:hover{border-color:#c8c3f7;box-shadow:0 10px 26px rgba(63,54,137,.07);transform:translateY(-1px)}
+.task.done{background:linear-gradient(180deg,#f7fcf9,#f1faf6);border-color:#d5eadf}
+.duration{background:linear-gradient(135deg,#f1efff,#e9e6ff);border:1px solid #e1ddff}
+.subject{border:1px solid #dce7fa}
+.subject.phd{border-color:#cde9df}.subject.apply{border-color:#f0dfc5}
+.task-efficiency{background:linear-gradient(90deg,#fafbfe,#f8f8fd);border-color:#dfe3ec}
+.eff-btn{transition:.14s ease}.eff-btn:hover{transform:translateY(-1px)}
+.task-actions .task-action{transition:.14s ease}
+.task-action:hover{transform:translateY(-1px);box-shadow:0 4px 10px rgba(80,70,160,.07)}
+.study-time-panel,.goal-panel{background:rgba(255,255,255,.95)}
+.study-time-kpi,.goal-kpi{background:linear-gradient(180deg,#fafbfe,#f7f8fc);border:1px solid #eceef4;border-radius:12px}
+.study-chart-shell{border-color:#e5e8ef;background:linear-gradient(180deg,#fbfcfe,#f8f9fc)}
+.module,.drill-module-card,.civil-sub-input-row,.drill-sub-row{box-shadow:0 4px 13px rgba(35,47,75,.035)}
+.module{background:linear-gradient(180deg,#fff,#fcfcfe)}
+.records tbody tr:hover{background:#fafaff}
+.live{background:
+  radial-gradient(circle at 90% 10%,rgba(105,217,174,.12),transparent 28%),
+  linear-gradient(145deg,#1c2d46,#16263c);
+  box-shadow:0 15px 38px rgba(17,37,63,.13)
+}
+.calendar-panel{
+  box-shadow:0 20px 54px rgba(12,19,34,.18),inset 0 1px 0 rgba(255,255,255,.035);
+  border-color:#30384d;
+}
+.calendar-heading h3{letter-spacing:-.25px}
+.calendar-viewport{scrollbar-color:#47506a #171b27}
+.calendar-event{
+  border-radius:10px!important;
+  box-shadow:0 5px 14px rgba(5,10,20,.16);
+  transition:box-shadow .14s ease,filter .14s ease;
+}
+.calendar-event:hover{box-shadow:0 9px 24px rgba(5,10,20,.25);filter:brightness(1.04)}
+.calendar-event.short{min-height:50px}
+.calendar-event.compact{min-height:28px}
+.calendar-hour{font-weight:750;letter-spacing:.1px}
+.calendar-now-line{filter:drop-shadow(0 0 4px rgba(255,92,92,.25))}
+.notion-panel{box-shadow:var(--shadow-card);border-color:#d5e9e2}
+@media(max-width:1150px){.topbar{margin:0}.content{padding-left:25px;padding-right:25px}}
+@media(max-width:730px){.topbar{position:static;background:transparent;backdrop-filter:none}.task{border-radius:13px}.head{padding-left:10px}}
+/* UI POLISH V3 END */
 </style><style>
 .cloud-panel{margin:0 0 20px;padding:24px 27px;border:1px solid #dddff7;border-radius:20px;background:linear-gradient(115deg,#ffffff,#f0f0ff);box-shadow:0 12px 30px #172d4c09}.cloud-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap}.cloud-kicker{font-size:10px;color:#7265ce;font-weight:900;letter-spacing:1.5px}.cloud-head h2{margin:7px 0;font-size:21px;line-height:1.4}.cloud-head p,.cloud-help{font-size:11px;color:#6e7890;line-height:1.85;margin:6px 0 12px}.cloud-status{border-radius:25px;padding:8px 13px;background:#fff;color:#795f9c;font-weight:800;font-size:11px;white-space:nowrap}.cloud-status.ok{color:#16836b;background:#dff6e9}.cloud-status.warn{color:#a76b16;background:#fff1d6}.cloud-details{background:#ffffffa6;border:1px solid #ececf9;border-radius:12px;padding:12px 14px;margin:13px 0}.cloud-details summary{cursor:pointer;color:#424678;font-weight:800;font-size:12px}.cloud-details summary span{font-weight:400;color:#858da2;margin-left:8px}.cloud-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:12px 0}.cloud-fields label{font-size:11px;color:#586782;font-weight:750;display:grid;gap:6px}.cloud-fields input{border:1px solid #dce2ee;border-radius:9px;min-height:40px;padding:10px;width:100%;min-width:0;font-size:13px;background:#fff}.cloud-buttons{display:flex;gap:9px;flex-wrap:wrap}.cloud-login{padding-top:5px}.cloud-logged{display:flex;flex-direction:column;gap:12px;padding:12px 0}.cloud-logged span{font-weight:750;font-size:12px;overflow-wrap:anywhere}.cloud-panel .hidden{display:none!important}@media(max-width:650px){.cloud-panel{padding:18px 15px}.cloud-fields{grid-template-columns:1fr}.cloud-head h2{font-size:19px}.cloud-buttons .btn{flex:1}}
 </style><style>
@@ -766,7 +892,7 @@ window.__notionBridge={
 
 
 /* Calendar mirrors the canonical task list. The only write path is editTaskTime(). */
-const CAL_SCALE=1, CAL_STEP=5;
+const CAL_SCALE=1.4, CAL_STEP=5;
 let calendarDrag=null, calendarUndo=null, calendarRenderKey='';
 const calViewport=$('calendarViewport'),calEvents=$('calendarEvents'),calPreview=$('calendarPreview'),calNowLine=$('calendarNowLine');
 function calendarDurationLabel(minutes){const h=Math.floor(minutes/60),m=minutes%60;return h?(h+'小时'+(m?m+'分钟':'')):m+'分钟'}
@@ -786,8 +912,8 @@ function renderCalendar(){
  if(current.length)clusters.push(current);
  for(const cluster of clusters){let laneEnds=[];for(const e of cluster){let lane=laneEnds.findIndex(end=>end<=e.start);if(lane<0){lane=laneEnds.length;laneEnds.push(e.end)}else laneEnds[lane]=e.end;e.lane=lane}const count=laneEnds.length;cluster.forEach(e=>e.totalLanes=count)}
  const maxEnd=Math.max(1440,...arr.map(x=>x.end)),boardEnd=Math.min(2880,Math.max(1440,Math.ceil((maxEnd+30)/60)*60));
- const hourCount=Math.floor(boardEnd/60)+1,hours=Array.from({length:hourCount},(_,h)=>{let label=h<24?pad(h)+':00':'次日 '+pad(h-24)+':00';return `<div class="calendar-hour" style="top:${h*60}px">${label}</div>`}).join('');
- const board=$('calendarBoard');board.style.height=boardEnd+'px';board.querySelectorAll('.calendar-hour').forEach(el=>el.remove());board.insertAdjacentHTML('afterbegin',hours);
+ const hourCount=Math.floor(boardEnd/60)+1,hours=Array.from({length:hourCount},(_,h)=>{let label=h<24?pad(h)+':00':'次日 '+pad(h-24)+':00';return `<div class="calendar-hour" style="top:${h*60*CAL_SCALE}px">${label}</div>`}).join('');
+ const board=$('calendarBoard');board.style.height=(boardEnd*CAL_SCALE)+'px';board.querySelectorAll('.calendar-hour').forEach(el=>el.remove());board.insertAdjacentHTML('afterbegin',hours);
  calEvents.innerHTML=arr.map(({item,start,end,lane,totalLanes})=>{let duration=end-start,height=Math.max(5,duration*CAL_SCALE),left=lane/totalLanes*100,width=100/totalLanes;return `<div class="calendar-event ${getDay().checked?.[item.id]?'done':''} ${duration<15?'compact':duration<45?'short':''}" data-calendar-task="${esc(item.id)}" data-kind="${esc(item.cat)}" tabindex="0" role="button" aria-label="${esc(item.title)}，${esc(taskTimeLabel(item.time))}；上下箭头移动，Shift加上下箭头调整时长" title="${esc(item.title)}｜${esc(taskTimeLabel(item.time))}" style="top:${start*CAL_SCALE}px;height:${height}px;left:calc(${left}% + 2px);width:calc(${width}% - 4px)"><div class="cal-time">${esc(calendarTimeLabel(start,end))}</div><div class="cal-title">${esc(item.title)}</div><button class="cal-copy" type="button" data-calendar-copy="${esc(item.id)}" aria-label="复制任务：${esc(item.title)}" title="复制为一项新的今日任务">⧉</button><button class="cal-delete" type="button" data-calendar-delete="${esc(item.id)}" aria-label="删除任务：${esc(item.title)}" title="从今日删除任务">×</button><div class="cal-grip" data-calendar-resize="1" title="拖动改变结束时间" aria-hidden="true"></div></div>`}).join('');
  renderNowLine();
  if(fresh)calendarLocateFirst();else calViewport.scrollTop=oldScroll;
