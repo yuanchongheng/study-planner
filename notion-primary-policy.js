@@ -3,6 +3,30 @@ if(window.__notionPrimaryPolicyStarted)return;
 window.__notionPrimaryPolicyStarted=true;
 const originalFetch=window.fetch.bind(window);
 const bridge=window.__notionBridge;
+
+function withModeHint(date,modeHint,fn){
+ if(!bridge||!date||!modeHint)return fn();
+ const state=bridge.state?.();
+ if(!state)return fn();
+ state.days=state.days||{};
+ const hadDay=Object.prototype.hasOwnProperty.call(state.days,date);
+ const day=state.days[date]||(state.days[date]={});
+ const hadMode=Object.prototype.hasOwnProperty.call(day,'mode');
+ const oldMode=day.mode;
+ day.mode=modeHint;
+ try{return fn()}
+ finally{
+  if(hadMode)day.mode=oldMode;else delete day.mode;
+  if(!hadDay&&Object.keys(day).length===0)delete state.days[date];
+ }
+}
+if(bridge&&!bridge.__modeHintPatched){
+ const upsert=bridge.upsert.bind(bridge),remove=bridge.remove.bind(bridge);
+ bridge.upsert=(date,localId,modeHint,t)=>withModeHint(date,modeHint,()=>upsert(date,localId,modeHint,t));
+ bridge.remove=(date,id,modeHint)=>withModeHint(date,modeHint,()=>remove(date,id,modeHint));
+ bridge.__modeHintPatched=true;
+}
+
 const parseSig=s=>{try{const a=JSON.parse(String(s||''));return Array.isArray(a)&&a.length>=8?a:null}catch{return null}};
 const canonicalTask=(known,sig)=>({
  syncId:known.syncId,
