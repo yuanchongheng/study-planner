@@ -4,17 +4,18 @@ window.__calendarColorLockStarted=true;
 const style=document.createElement('style');
 style.textContent=`
 .gcal-event.civil{
-  background:#eeeafd!important;
-  border-left:4px solid #7066df!important;
-  color:#5148b4!important;
-  box-shadow:0 2px 6px rgba(112,102,223,.16)!important;
+  background:#7066df!important;
+  border:0!important;
+  color:#fff!important;
+  box-shadow:0 3px 10px rgba(112,102,223,.28)!important;
 }
 .gcal-event.civil .gcal-event-title,
 .gcal-event.civil .gcal-event-meta{
-  color:#5148b4!important;
+  color:#fff!important;
 }
+.gcal-event.civil .gcal-event-meta{opacity:.86}
 .gcal-event.civil.selected{
-  outline:2px solid #7066df!important;
+  outline:2px solid #b9b2ff!important;
   outline-offset:1px!important;
 }
 .gside-dot.civil{background:#7066df!important}
