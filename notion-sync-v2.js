@@ -21,7 +21,7 @@ if(calendarMode){
  `;
  document.head.appendChild(s);
 }
-const V='20261004-0260';
+const V='20261004-0280';
 const load=src=>new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=src+(src.includes('?')?'&':'?')+'v='+V;s.onload=resolve;s.onerror=reject;document.head.appendChild(s)});
 load('./notion-primary-policy.js')
  .then(()=>load('./notion-sync-core-v2.js'))
