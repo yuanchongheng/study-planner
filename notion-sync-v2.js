@@ -21,8 +21,9 @@ if(calendarMode){
  `;
  document.head.appendChild(s);
 }
-const V='20261004-0360';
+const V='20261004-0370';
 const load=src=>new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=src+(src.includes('?')?'&':'?')+'v='+V;s.onload=resolve;s.onerror=reject;document.head.appendChild(s)});
+const revealCalendar=()=>{if(!calendarMode)return;requestAnimationFrame(()=>requestAnimationFrame(()=>{document.documentElement.classList.remove('calendar-boot');document.documentElement.classList.add('calendar-ready')}))};
 load('./website-primary-policy.js')
  .then(()=>load('./notion-sync-core-v2.js'))
  .catch(()=>{});
@@ -33,6 +34,7 @@ if(calendarMode){
   .then(()=>load('./calendar-drag-sidepanel.js'))
   .then(()=>load('./google-calendar-shell-v2.js'))
   .then(()=>load('./calendar-color-lock.js'))
-  .catch(()=>{});
+  .then(revealCalendar)
+  .catch(()=>revealCalendar());
 }else load('./today-home.js').catch(()=>{});
 })();
