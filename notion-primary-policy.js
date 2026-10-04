@@ -20,9 +20,22 @@ function withModeHint(date,modeHint,fn){
   if(!hadDay&&Object.keys(day).length===0)delete state.days[date];
  }
 }
+function clearCustomOverrides(date,localId,modeHint){
+ if(!bridge||!date||!localId?.startsWith('custom_'))return;
+ const state=bridge.state?.(),day=state?.days?.[date];if(!day)return;
+ const modes=modeHint?[modeHint]:Object.keys(day.timeOverrides||{});
+ for(const mode of modes){
+  if(day.timeOverrides?.[mode])delete day.timeOverrides[mode][localId];
+  if(day.taskOverrides?.[mode])delete day.taskOverrides[mode][localId];
+ }
+}
 if(bridge&&!bridge.__modeHintPatched){
  const upsert=bridge.upsert.bind(bridge),remove=bridge.remove.bind(bridge);
- bridge.upsert=(date,localId,modeHint,t)=>withModeHint(date,modeHint,()=>upsert(date,localId,modeHint,t));
+ bridge.upsert=(date,localId,modeHint,t)=>withModeHint(date,modeHint,()=>{
+  const result=upsert(date,localId,modeHint,t);
+  clearCustomOverrides(date,localId||result?.localId,modeHint||result?.mode);
+  return result;
+ });
  bridge.remove=(date,id,modeHint)=>withModeHint(date,modeHint,()=>remove(date,id,modeHint));
  bridge.__modeHintPatched=true;
 }
