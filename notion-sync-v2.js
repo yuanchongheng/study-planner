@@ -21,7 +21,7 @@ if(calendarMode){
  `;
  document.head.appendChild(s);
 }
-const V='20261004-0350';
+const V='20261004-0360';
 const load=src=>new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=src+(src.includes('?')?'&':'?')+'v='+V;s.onload=resolve;s.onerror=reject;document.head.appendChild(s)});
 load('./website-primary-policy.js')
  .then(()=>load('./notion-sync-core-v2.js'))
@@ -30,6 +30,7 @@ if(calendarMode){
  load('./google-calendar-planner-v3.js')
   .then(()=>load('./calendar-drag-create.js'))
   .then(()=>load('./calendar-drag-controller-v2.js'))
+  .then(()=>load('./calendar-drag-sidepanel.js'))
   .then(()=>load('./google-calendar-shell-v2.js'))
   .then(()=>load('./calendar-color-lock.js'))
   .catch(()=>{});
