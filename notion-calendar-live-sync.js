@@ -2,13 +2,21 @@
 if(window.__notionCalendarLiveSyncStarted)return;
 window.__notionCalendarLiveSyncStarted=true;
 const planner=document.querySelector('.gcal-planner');
-if(!planner)return;
+const bridge=window.__notionBridge;
+if(!planner||!bridge)return;
 let rotateIndex=0,lastRequested='',bursting=false,injectTimer=null;
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 const visibleDates=()=>[...new Set([...planner.querySelectorAll('[data-head-date]')].map(x=>x.dataset.headDate).filter(Boolean))];
 const primaryDate=()=>{const ds=visibleDates();return ds[3]||ds.find(d=>d===new Date().toISOString().slice(0,10))||ds[0]||''};
-function selectDate(date,{force=false}={}){
+async function ensureCloudClean(){
+ const c=bridge.cloud?.();
+ if(!c?.configured||!c.loggedIn||!c.initialized||c.conflict)return !c?.conflict;
+ if(c.dirty&&bridge.flushCloud){try{await bridge.flushCloud()}catch{return false}}
+ return !bridge.cloud?.().dirty&&!bridge.cloud?.().conflict;
+}
+async function selectDate(date,{force=false}={}){
  if(!date)return false;
+ if(!(await ensureCloudClean()))return false;
  const input=document.getElementById('date');
  if(!input)return false;
  if(!force&&input.value===date&&lastRequested===date)return false;
@@ -17,8 +25,8 @@ function selectDate(date,{force=false}={}){
  input.dispatchEvent(new Event('change',{bubbles:true}));
  return true;
 }
-function requestPrimary(){const d=primaryDate();if(d)selectDate(d,{force:true})}
-function requestClickedDate(date){if(date)selectDate(date,{force:true})}
+async function requestPrimary(){const d=primaryDate();if(d)await selectDate(d,{force:true})}
+async function requestClickedDate(date){if(date)await selectDate(date,{force:true})}
 function statusButton(text,state=''){
  const b=planner.querySelector('[data-notion-live-refresh]');if(!b)return;
  b.textContent=text;b.dataset.state=state;
@@ -38,20 +46,21 @@ async function manualRefresh(){
  try{
   const d=primaryDate();if(!d)return;
   statusButton('同步中…','busy');
-  selectDate(d,{force:true});
-  await sleep(180);
+  const ok=await selectDate(d,{force:true});
+  if(!ok&&bridge.cloud?.().dirty){statusButton('等待云同步','busy');return}
+  await sleep(220);
   const manual=document.getElementById('notionToday');
   if(manual)manual.click();
-  await sleep(2200);
+  await sleep(2400);
   statusButton('已请求同步','ok');
   setTimeout(()=>statusButton('↻ Notion',''),1600);
  }finally{bursting=false}
 }
-function backgroundTick(){
+async function backgroundTick(){
  if(document.hidden||navigator.onLine===false||bursting)return;
  const dates=visibleDates();if(!dates.length)return;
  const d=dates[rotateIndex%dates.length];rotateIndex=(rotateIndex+1)%dates.length;
- selectDate(d,{force:true});
+ await selectDate(d,{force:true});
 }
 planner.addEventListener('click',e=>{
  const refresh=e.target.closest('[data-notion-live-refresh]');if(refresh){e.preventDefault();e.stopPropagation();manualRefresh();return}
@@ -64,7 +73,7 @@ document.addEventListener('click',e=>{
 window.addEventListener('focus',()=>setTimeout(requestPrimary,180));
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)setTimeout(requestPrimary,220)});
 new MutationObserver(()=>{
- clearTimeout(injectTimer);injectTimer=setTimeout(()=>{injectButton();const d=primaryDate();if(d&&d!==document.getElementById('date')?.value)selectDate(d,{force:true})},80);
+ clearTimeout(injectTimer);injectTimer=setTimeout(async()=>{injectButton();const d=primaryDate();if(d&&d!==document.getElementById('date')?.value)await selectDate(d,{force:true})},80);
 }).observe(planner,{childList:true,subtree:false});
 const style=document.createElement('style');
 style.textContent=`
