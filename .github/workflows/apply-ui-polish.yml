@@ -23,9 +23,11 @@ jobs:
         run: node scripts/apply-ui-polish.mjs
       - name: Verify planner entry
         run: |
-          grep -F './notion-sync-v2.js?v=20261005-0460' index.html
+          grep -F './notion-sync-v2.js?v=20261005-0470' index.html
           grep -F 'function dragDayFromX(x)' google-calendar-planner-v3.js
           grep -F "if(dragState&&dragState.moved)updateDrag(e)" google-calendar-planner-v3.js
+          grep -F 'gcal-event-goal' calendar-content-readonly.js
+          grep -F 'data-panel-goal' calendar-drag-sidepanel.js
           grep -F 'calendarBootStyle' index.html
       - name: Commit planner files
         run: |
@@ -36,5 +38,5 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '4189822+github-actions[bot]@users.noreply.github.com'
           git add index.html google-calendar-planner-v3.js
-          git commit -m 'Publish final calendar drag release fix'
+          git commit -m 'Publish calendar goal display release'
           git push
