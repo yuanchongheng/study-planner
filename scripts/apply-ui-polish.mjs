@@ -3,7 +3,7 @@ import fs from 'node:fs';
 const path = 'index.html';
 let h = fs.readFileSync(path, 'utf8');
 const before = h;
-const version = '20261005-0460';
+const version = '20261005-0470';
 
 const scriptRe = /<script\s+src=["']\.\/notion-sync-v2\.js(?:\?v=[^"']*)?["']\s*><\/script>/;
 if (!scriptRe.test(h)) throw new Error('Missing notion-sync-v2.js script tag in index.html');
