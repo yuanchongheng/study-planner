@@ -21,16 +21,16 @@ if(calendarMode){
  `;
  document.head.appendChild(s);
 }
-const V='20261005-0390';
+const V='20261005-0400';
 const load=src=>new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=src+(src.includes('?')?'&':'?')+'v='+V;s.onload=resolve;s.onerror=reject;document.head.appendChild(s)});
 const revealCalendar=()=>{if(!calendarMode)return;requestAnimationFrame(()=>requestAnimationFrame(()=>{document.documentElement.classList.remove('calendar-boot');document.documentElement.classList.add('calendar-ready')}))};
 const coreReady=load('./website-primary-policy.js')
  .then(()=>load('./notion-sync-core-v2.js'))
- .then(()=>load('./calendar-main-sync.js'))
- .then(()=>load('./calendar-task-content-fix.js'));
+ .then(()=>load('./calendar-main-sync.js'));
 if(calendarMode){
  coreReady
   .then(()=>load('./google-calendar-planner-v3.js'))
+  .then(()=>load('./calendar-content-readonly.js'))
   .then(()=>load('./calendar-drag-create.js'))
   .then(()=>load('./calendar-drag-controller-v2.js'))
   .then(()=>load('./calendar-drag-sidepanel.js'))
