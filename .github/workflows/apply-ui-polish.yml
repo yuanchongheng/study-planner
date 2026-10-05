@@ -23,7 +23,7 @@ jobs:
         run: node scripts/apply-ui-polish.mjs
       - name: Verify planner entry
         run: |
-          grep -F './notion-sync-v2.js?v=20261005-0390' index.html
+          grep -F './notion-sync-v2.js?v=20261005-0400' index.html
           grep -F 'calendarBootStyle' index.html
       - name: Commit homepage entry
         run: |
@@ -34,5 +34,5 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '4189822+github-actions[bot]@users.noreply.github.com'
           git add index.html
-          git commit -m 'Publish task content editing fix'
+          git commit -m 'Publish calendar content ownership fix'
           git push
