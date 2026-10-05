@@ -60,12 +60,32 @@ function applyRaw(raw){
  return true;
 }
 function flushPending(){if(taskEditorActive()||!pendingRaw)return;const raw=pendingRaw;pendingRaw='';applyRaw(raw)}
+function finishLocalSave(){
+ // The main-site edit that just completed is authoritative. Any state received
+ // while the form was open predates the user's save and must not overwrite it.
+ pendingRaw='';
+ window.__studyPlannerTaskEditing=false;
+ lastRaw=serialize();
+ try{const raw=localStorage.getItem(KEY);if(raw)lastRaw=raw}catch{}
+ try{channel?.postMessage({type:'state',from:tabId,raw:lastRaw,at:Date.now()})}catch{}
+}
 
 document.addEventListener('focusin',e=>{if(e.target?.closest?.('[data-task-form],#addTaskForm'))window.__studyPlannerTaskEditing=true},true);
 document.addEventListener('input',e=>{if(e.target?.closest?.('[data-task-form],#addTaskForm'))window.__studyPlannerTaskEditing=true},true);
-document.addEventListener('submit',e=>{if(e.target?.matches?.('[data-task-form],#addTaskForm'))setTimeout(()=>{window.__studyPlannerTaskEditing=false;flushPending()},350)},true);
-document.addEventListener('click',e=>{if(e.target?.closest?.('[data-cancel-edit],#cancelAddTask'))setTimeout(()=>{window.__studyPlannerTaskEditing=false;flushPending()},80)},true);
-document.addEventListener('focusout',()=>setTimeout(()=>{if(!document.activeElement?.closest?.('[data-task-form],#addTaskForm')&&!document.querySelector('[data-task-form]')){window.__studyPlannerTaskEditing=false;flushPending()}},120),true);
+document.addEventListener('submit',e=>{
+ if(!e.target?.matches?.('[data-task-form],#addTaskForm'))return;
+ // Drop stale queued state immediately, before the site's own submit handler saves.
+ pendingRaw='';
+ setTimeout(finishLocalSave,350);
+},true);
+document.addEventListener('click',e=>{
+ if(e.target?.closest?.('[data-cancel-edit],#cancelAddTask'))setTimeout(()=>{window.__studyPlannerTaskEditing=false;flushPending()},80);
+},true);
+document.addEventListener('focusout',()=>setTimeout(()=>{
+ if(!document.activeElement?.closest?.('[data-task-form],#addTaskForm')&&!document.querySelector('[data-task-form]')){
+  window.__studyPlannerTaskEditing=false;flushPending();
+ }
+},120),true);
 
 window.addEventListener('storage',e=>{if(e.key===KEY&&e.newValue)applyRaw(e.newValue)});
 if(channel)channel.onmessage=e=>{const m=e.data;if(!m||m.type!=='state'||m.from===tabId)return;applyRaw(m.raw)};
