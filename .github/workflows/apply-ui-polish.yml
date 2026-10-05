@@ -23,16 +23,17 @@ jobs:
         run: node scripts/apply-ui-polish.mjs
       - name: Verify planner entry
         run: |
-          grep -F './notion-sync-v2.js?v=20261005-0440' index.html
+          grep -F './notion-sync-v2.js?v=20261005-0450' index.html
+          grep -F 'function dragDayFromX(x)' google-calendar-planner-v3.js
           grep -F 'calendarBootStyle' index.html
       - name: Commit homepage entry
         run: |
-          if git diff --quiet -- index.html; then
-            echo 'No homepage change needed.'
+          if git diff --quiet -- index.html google-calendar-planner-v3.js; then
+            echo 'No planner change needed.'
             exit 0
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '4189822+github-actions[bot]@users.noreply.github.com'
-          git add index.html
-          git commit -m 'Publish Notion rerender fix'
+          git add index.html google-calendar-planner-v3.js
+          git commit -m 'Publish calendar drag target fix'
           git push
