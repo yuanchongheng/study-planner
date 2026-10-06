@@ -3,7 +3,7 @@ import fs from 'node:fs';
 const path = 'index.html';
 let h = fs.readFileSync(path, 'utf8');
 const before = h;
-const version = '20261005-0470';
+const version = '20261006-0480';
 
 const scriptRe = /<script\s+src=["']\.\/notion-sync-v2\.js(?:\?v=[^"']*)?["']\s*><\/script>/;
 if (!scriptRe.test(h)) throw new Error('Missing notion-sync-v2.js script tag in index.html');
@@ -21,16 +21,6 @@ if (h !== before) {
 
 const calendarPath = 'google-calendar-planner-v3.js';
 let calendar = fs.readFileSync(calendarPath, 'utf8');
-
-const oldDrag = `function updateDrag(e){if(!dragState)return;autoScroll(e.clientY);if(!dragState.moved&&Math.hypot(e.clientX-dragState.startX,e.clientY-dragState.startY)<DRAG_THRESHOLD)return;dragState.moved=true;const el=document.elementFromPoint(e.clientX,e.clientY),day=el?.closest?.('.gcal-day');if(!day)return;const start=Math.min(DAY_MIN-DRAG_SNAP,minuteFromPoint(day,e.clientY,DRAG_SNAP,dragState.grabOffset));dragState.targetDate=day.dataset.date;dragState.start=start;if(!dragState.ghost){dragState.ghost=document.createElement('div');dragState.ghost.className='gcal-dragghost'}if(dragState.ghost.parentElement!==day)day.appendChild(dragState.ghost);dragState.ghost.style.top=\`${'${start/60*HOUR_PX}'}px\`;dragState.ghost.style.height=\`${'${Math.max(22,Math.min(DAY_MIN-start,dragState.duration)/60*HOUR_PX-2)}'}px\`}`;
-const newDrag = `function dragDayFromX(x){const days=[...box.querySelectorAll('.gcal-day')];if(!days.length)return null;let best=null,dist=Infinity;for(const day of days){const r=day.getBoundingClientRect();if(x>=r.left&&x<=r.right)return day;const d=x<r.left?r.left-x:x-r.right;if(d<dist){dist=d;best=day}}return best}\nfunction updateDrag(e){if(!dragState)return;autoScroll(e.clientY);if(!dragState.moved&&Math.hypot(e.clientX-dragState.startX,e.clientY-dragState.startY)<DRAG_THRESHOLD)return;dragState.moved=true;const day=dragDayFromX(e.clientX);if(!day)return;const start=Math.min(DAY_MIN-DRAG_SNAP,minuteFromPoint(day,e.clientY,DRAG_SNAP,dragState.grabOffset));dragState.targetDate=day.dataset.date;dragState.start=start;if(!dragState.ghost){dragState.ghost=document.createElement('div');dragState.ghost.className='gcal-dragghost'}if(dragState.ghost.parentElement!==day)day.appendChild(dragState.ghost);dragState.ghost.style.top=\`${'${start/60*HOUR_PX}'}px\`;dragState.ghost.style.height=\`${'${Math.max(22,Math.min(DAY_MIN-start,dragState.duration)/60*HOUR_PX-2)}'}px\`}`;
-if (calendar.includes(oldDrag)) calendar = calendar.replace(oldDrag, newDrag);
-else if (!calendar.includes('function dragDayFromX(x)')) throw new Error('Could not find the expected calendar updateDrag implementation.');
-
-const oldPointerUp = `window.addEventListener('pointerup',()=>{if(dragState)endDrag();if(resizeState)finishResize(false)});`;
-const newPointerUp = `window.addEventListener('pointerup',e=>{if(dragState&&dragState.moved)updateDrag(e);if(dragState)endDrag();if(resizeState)finishResize(false)});`;
-if (calendar.includes(oldPointerUp)) calendar = calendar.replace(oldPointerUp, newPointerUp);
-else if (!calendar.includes(newPointerUp)) throw new Error('Could not find the expected calendar pointerup handler.');
-
-fs.writeFileSync(calendarPath, calendar);
-console.log('Calendar drag uses coordinate targeting and final pointer-up coordinates.');
+if (!calendar.includes('function dragDayFromX(x)')) throw new Error('Missing coordinate-based calendar drag targeting.');
+if (!calendar.includes("if(dragState&&dragState.moved)updateDrag(e)")) throw new Error('Missing final pointer-up drag targeting.');
+console.log('Calendar drag core verified: coordinate targeting + final pointer-up position.');
