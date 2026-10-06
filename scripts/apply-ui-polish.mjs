@@ -3,7 +3,7 @@ import fs from 'node:fs';
 const path = 'index.html';
 let h = fs.readFileSync(path, 'utf8');
 const before = h;
-const version = '20261006-0490';
+const version = '20261006-0500';
 
 const scriptRe = /<script\s+src=["']\.\/notion-sync-v2\.js(?:\?v=[^"']*)?["']\s*><\/script>/;
 if (!scriptRe.test(h)) throw new Error('Missing notion-sync-v2.js script tag in index.html');
@@ -22,24 +22,13 @@ if (h !== before) {
 const calendarPath = 'google-calendar-planner-v3.js';
 let calendar = fs.readFileSync(calendarPath, 'utf8');
 
-if (!calendar.includes('function updateCopiedCustomTime(')) {
-  const marker = 'function fragmentsFor(date){';
-  const helper = `function updateCopiedCustomTime(date,id,start,end){if(!String(id||'').startsWith('custom_'))return null;const state=bridge.state?.(),day=state?.days?.[date],groups=day?.extraTasks;if(!groups||typeof groups!=='object')return null;for(const [mode,list] of Object.entries(groups)){if(!Array.isArray(list))continue;const entry=list.find(x=>String(x?.id)===String(id));if(!entry)continue;entry.time=\`${'${start}'}—${'${end}'}\`;entry.minutes=duration({time:entry.time});return{localId:id,mode}}return null}\n`;
-  if (!calendar.includes(marker)) throw new Error('Missing calendar fragments marker.');
-  calendar = calendar.replace(marker, helper + marker);
-}
-
-const oldSameDate = `else if(s.targetDate===s.sourceDate){r=saveTask(s.sourceDate,s.id,targetTask,bridge.snapshot(s.sourceDate).mode||'');notify('已移动任务')}`;
-const newSameDate = `else if(s.targetDate===s.sourceDate){r=updateCopiedCustomTime(s.sourceDate,s.id,targetTask.start,targetTask.end)||saveTask(s.sourceDate,s.id,targetTask,bridge.snapshot(s.sourceDate).mode||'');notify('已移动任务')}`;
-if (calendar.includes(oldSameDate)) calendar = calendar.replace(oldSameDate, newSameDate);
-else if (!calendar.includes(newSameDate)) throw new Error('Missing same-date drag save branch.');
-
-const oldResize = `saveTask(s.sourceDate,s.id,s.task,bridge.snapshot(s.sourceDate).mode||'');bridge.commit();render();notify(\`已调整为 ${'${durationLabel(resizeTotal(s,end))}'}\`)`;
-const newResize = `updateCopiedCustomTime(s.sourceDate,s.id,s.task.start,s.task.end)||saveTask(s.sourceDate,s.id,s.task,bridge.snapshot(s.sourceDate).mode||'');bridge.commit();render();notify(\`已调整为 ${'${durationLabel(resizeTotal(s,end))}'}\`)`;
-if (calendar.includes(oldResize)) calendar = calendar.replace(oldResize, newResize);
-else if (!calendar.includes(newResize)) throw new Error('Missing resize save branch.');
+const oldHelper = `function updateCopiedCustomTime(date,id,start,end){if(!String(id||'').startsWith('custom_'))return null;const state=bridge.state?.(),day=state?.days?.[date],groups=day?.extraTasks;if(!groups||typeof groups!=='object')return null;for(const [mode,list] of Object.entries(groups)){if(!Array.isArray(list))continue;const entry=list.find(x=>String(x?.id)===String(id));if(!entry)continue;entry.time=\`${'${start}'}—${'${end}'}\`;entry.minutes=duration({time:entry.time});return{localId:id,mode}}return null}`;
+const newHelper = `function updateCopiedCustomTime(date,id,start,end){if(!String(id||'').startsWith('custom_'))return null;const state=bridge.state?.(),day=state?.days?.[date],groups=day?.extraTasks;if(!groups||typeof groups!=='object')return null;for(const [mode,list] of Object.entries(groups)){if(!Array.isArray(list))continue;const entry=list.find(x=>String(x?.id)===String(id));if(!entry)continue;entry.time=\`${'${start}'}—${'${end}'}\`;entry.minutes=duration({time:entry.time});if(day.timeOverrides&&typeof day.timeOverrides==='object'){for(const key of Object.keys(day.timeOverrides)){if(day.timeOverrides[key])delete day.timeOverrides[key][id]}}return{localId:id,mode}}return null}`;
+if (calendar.includes(oldHelper)) calendar = calendar.replace(oldHelper, newHelper);
+else if (!calendar.includes(newHelper)) throw new Error('Missing copied custom task time helper.');
 
 if (!calendar.includes('function dragDayFromX(x)')) throw new Error('Missing coordinate-based calendar drag targeting.');
 if (!calendar.includes("if(dragState&&dragState.moved)updateDrag(e)")) throw new Error('Missing final pointer-up drag targeting.');
+if (!calendar.includes("delete day.timeOverrides[key][id]")) throw new Error('Missing manual-time override cleanup.');
 fs.writeFileSync(calendarPath, calendar);
-console.log('Calendar copied custom tasks now persist drag/resize by mutating their exact extraTasks record.');
+console.log('Manual calendar edits now clear stale day-start timeOverrides for copied custom tasks.');
