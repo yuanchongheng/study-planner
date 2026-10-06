@@ -3,7 +3,7 @@ import fs from 'node:fs';
 const path = 'index.html';
 let h = fs.readFileSync(path, 'utf8');
 const before = h;
-const version = '20261006-0500';
+const version = '20261006-0510';
 
 const scriptRe = /<script\s+src=["']\.\/notion-sync-v2\.js(?:\?v=[^"']*)?["']\s*><\/script>/;
 if (!scriptRe.test(h)) throw new Error('Missing notion-sync-v2.js script tag in index.html');
@@ -21,14 +21,13 @@ if (h !== before) {
 
 const calendarPath = 'google-calendar-planner-v3.js';
 let calendar = fs.readFileSync(calendarPath, 'utf8');
-
-const oldHelper = `function updateCopiedCustomTime(date,id,start,end){if(!String(id||'').startsWith('custom_'))return null;const state=bridge.state?.(),day=state?.days?.[date],groups=day?.extraTasks;if(!groups||typeof groups!=='object')return null;for(const [mode,list] of Object.entries(groups)){if(!Array.isArray(list))continue;const entry=list.find(x=>String(x?.id)===String(id));if(!entry)continue;entry.time=\`${'${start}'}—${'${end}'}\`;entry.minutes=duration({time:entry.time});return{localId:id,mode}}return null}`;
-const newHelper = `function updateCopiedCustomTime(date,id,start,end){if(!String(id||'').startsWith('custom_'))return null;const state=bridge.state?.(),day=state?.days?.[date],groups=day?.extraTasks;if(!groups||typeof groups!=='object')return null;for(const [mode,list] of Object.entries(groups)){if(!Array.isArray(list))continue;const entry=list.find(x=>String(x?.id)===String(id));if(!entry)continue;entry.time=\`${'${start}'}—${'${end}'}\`;entry.minutes=duration({time:entry.time});if(day.timeOverrides&&typeof day.timeOverrides==='object'){for(const key of Object.keys(day.timeOverrides)){if(day.timeOverrides[key])delete day.timeOverrides[key][id]}}return{localId:id,mode}}return null}`;
-if (calendar.includes(oldHelper)) calendar = calendar.replace(oldHelper, newHelper);
-else if (!calendar.includes(newHelper)) throw new Error('Missing copied custom task time helper.');
-
 if (!calendar.includes('function dragDayFromX(x)')) throw new Error('Missing coordinate-based calendar drag targeting.');
 if (!calendar.includes("if(dragState&&dragState.moved)updateDrag(e)")) throw new Error('Missing final pointer-up drag targeting.');
 if (!calendar.includes("delete day.timeOverrides[key][id]")) throw new Error('Missing manual-time override cleanup.');
-fs.writeFileSync(calendarPath, calendar);
-console.log('Manual calendar edits now clear stale day-start timeOverrides for copied custom tasks.');
+console.log('Calendar drag/time override fixes verified.');
+
+const coordinatorPath='same-device-cloud-sync.js';
+const coordinator=fs.readFileSync(coordinatorPath,'utf8');
+if(!coordinator.includes("navigator.locks.request(WEB_LOCK")) throw new Error('Missing same-device Web Locks coordinator.');
+if(!coordinator.includes("localStorage.getItem(REV_KEY)")) throw new Error('Missing shared revision refresh.');
+console.log('Same-device cloud write coordinator verified.');
