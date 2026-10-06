@@ -23,10 +23,11 @@ jobs:
         run: node scripts/apply-ui-polish.mjs
       - name: Verify planner entry
         run: |
-          grep -F './notion-sync-v2.js?v=20261006-0490' index.html
+          grep -F './notion-sync-v2.js?v=20261006-0500' index.html
           grep -F 'function dragDayFromX(x)' google-calendar-planner-v3.js
           grep -F "if(dragState&&dragState.moved)updateDrag(e)" google-calendar-planner-v3.js
           grep -F 'function updateCopiedCustomTime(' google-calendar-planner-v3.js
+          grep -F 'delete day.timeOverrides[key][id]' google-calendar-planner-v3.js
           grep -F 'gcal-event-goal' calendar-content-readonly.js
           grep -F 'data-panel-goal' calendar-drag-sidepanel.js
           if grep -F './calendar-drag-controller-v2.js' notion-sync-v2.js; then
@@ -43,5 +44,5 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '4189822+github-actions[bot]@users.noreply.github.com'
           git add index.html google-calendar-planner-v3.js
-          git commit -m 'Publish copied-task drag persistence fix'
+          git commit -m 'Publish manual calendar time override fix'
           git push
