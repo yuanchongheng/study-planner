@@ -3,7 +3,7 @@ import fs from 'node:fs';
 const path = 'index.html';
 let h = fs.readFileSync(path, 'utf8');
 const before = h;
-const version = '20261009-0540';
+const version = '20261009-0550';
 
 const scriptRe = /<script\s+src=["']\.\/notion-sync-v2\.js(?:\?v=[^"']*)?["']\s*><\/script>/;
 if (!scriptRe.test(h)) throw new Error('Missing notion-sync-v2.js script tag in index.html');
@@ -14,10 +14,19 @@ const bootRe = /<style id="calendarBootStyle">[\s\S]*?<\/style><script id="calen
 if (bootRe.test(h)) h = h.replace(bootRe, boot);
 else h = h.replace(/<head>/i, `<head>${boot}`);
 
+// Apply the main-site theme before the browser can paint the legacy inline styles.
+// The stylesheet is deliberately a normal head stylesheet (not dynamically loaded),
+// so first paint already uses the new UI and cannot flash the old design.
+const themeBoot = `<script id="mainThemeBoot">(()=>{try{if(new URLSearchParams(location.search).get('calendar')!=='1')document.documentElement.classList.add('qoder-ui')}catch{document.documentElement.classList.add('qoder-ui')}})();</script><link id="mainThemeCss" rel="stylesheet" href="./qoder-theme.css?v=${version}">`;
+const themeBootRe = /<script id="mainThemeBoot">[\s\S]*?<\/script><link id="mainThemeCss" rel="stylesheet" href="\.\/qoder-theme\.css\?v=[^"]+">/;
+if(themeBootRe.test(h)) h=h.replace(themeBootRe,themeBoot);
+else if(/<meta charset/i.test(h)) h=h.replace(/<meta charset/i,`${themeBoot}<meta charset`);
+else h=h.replace(/<head>/i,`<head>${themeBoot}`);
+
 if (h !== before) {
   fs.writeFileSync(path, h);
-  console.log(`Updated index.html planner script to v=${version} and installed calendar boot style.`);
-} else console.log('index.html already uses the current planner version and calendar boot style.');
+  console.log(`Updated index.html to v=${version}; main theme now loads before first paint.`);
+} else console.log('index.html already uses the current no-flash theme boot.');
 
 const calendarPath = 'google-calendar-planner-v3.js';
 let calendar = fs.readFileSync(calendarPath, 'utf8');
