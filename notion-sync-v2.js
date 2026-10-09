@@ -1,9 +1,18 @@
 (()=>{'use strict';
 const calendarMode=new URLSearchParams(location.search).get('calendar')==='1';
 const hero=document.getElementById('overview');
-if(hero){hero.classList.add('hidden');hero.setAttribute('aria-hidden','true')}
 const notice=document.querySelector('.notice');
-if(notice){notice.classList.add('hidden');notice.setAttribute('aria-hidden','true')}
+if(calendarMode){
+ if(hero){hero.classList.add('hidden');hero.setAttribute('aria-hidden','true')}
+ if(notice){notice.classList.add('hidden');notice.setAttribute('aria-hidden','true')}
+}else{
+ document.documentElement.classList.add('qoder-ui');
+ if(hero){hero.classList.remove('hidden');hero.removeAttribute('aria-hidden')}
+ if(notice){notice.classList.remove('hidden');notice.removeAttribute('aria-hidden')}
+ const theme=document.createElement('link');
+ theme.rel='stylesheet';theme.href='./qoder-theme.css?v=20261009-0520';theme.dataset.qoderTheme='1';
+ document.head.appendChild(theme);
+}
 document.querySelector('.side-foot')?.remove();
 const legacyCalendar=document.getElementById('dragCalendar');
 if(legacyCalendar){legacyCalendar.classList.add('hidden');legacyCalendar.setAttribute('aria-hidden','true')}
@@ -21,7 +30,7 @@ if(calendarMode){
  `;
  document.head.appendChild(s);
 }
-const V='20261006-0510';
+const V='20261009-0520';
 const load=src=>new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=src+(src.includes('?')?'&':'?')+'v='+V;s.onload=resolve;s.onerror=reject;document.head.appendChild(s)});
 const revealCalendar=()=>{if(!calendarMode)return;requestAnimationFrame(()=>requestAnimationFrame(()=>{document.documentElement.classList.remove('calendar-boot');document.documentElement.classList.add('calendar-ready')}))};
 const coreReady=load('./website-primary-policy.js')
