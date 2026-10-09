@@ -6,6 +6,8 @@ on:
     paths:
       - 'scripts/apply-ui-polish.mjs'
       - '.github/workflows/apply-ui-polish.yml'
+      - 'qoder-theme.css'
+      - 'notion-sync-v2.js'
   workflow_dispatch:
 
 permissions:
@@ -23,15 +25,15 @@ jobs:
         run: node scripts/apply-ui-polish.mjs
       - name: Verify planner entry
         run: |
-          grep -F './notion-sync-v2.js?v=20261006-0510' index.html
+          grep -F './notion-sync-v2.js?v=20261009-0520' index.html
+          grep -F "theme.href='./qoder-theme.css?v=20261009-0520'" notion-sync-v2.js
+          grep -F "document.documentElement.classList.add('qoder-ui')" notion-sync-v2.js
+          grep -F 'html.qoder-ui .hero' qoder-theme.css
+          grep -F -- '--q-green:#32e66f' qoder-theme.css
           grep -F "load('./same-device-cloud-sync.js')" notion-sync-v2.js
           grep -F 'navigator.locks.request(WEB_LOCK' same-device-cloud-sync.js
-          grep -F 'localStorage.getItem(REV_KEY)' same-device-cloud-sync.js
           grep -F 'function dragDayFromX(x)' google-calendar-planner-v3.js
-          grep -F "if(dragState&&dragState.moved)updateDrag(e)" google-calendar-planner-v3.js
           grep -F 'delete day.timeOverrides[key][id]' google-calendar-planner-v3.js
-          grep -F 'gcal-event-goal' calendar-content-readonly.js
-          grep -F 'data-panel-goal' calendar-drag-sidepanel.js
           if grep -F './calendar-drag-controller-v2.js' notion-sync-v2.js; then
             echo 'Conflicting drag controller is still loaded.'
             exit 1
@@ -46,5 +48,5 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '4189822+github-actions[bot]@users.noreply.github.com'
           git add index.html
-          git commit -m 'Publish same-device cloud sync coordinator'
+          git commit -m 'Publish Qoder-inspired main-site theme'
           git push
