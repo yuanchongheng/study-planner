@@ -3,7 +3,7 @@ import fs from 'node:fs';
 const path = 'index.html';
 let h = fs.readFileSync(path, 'utf8');
 const before = h;
-const version = '20261009-0520';
+const version = '20261009-0540';
 
 const scriptRe = /<script\s+src=["']\.\/notion-sync-v2\.js(?:\?v=[^"']*)?["']\s*><\/script>/;
 if (!scriptRe.test(h)) throw new Error('Missing notion-sync-v2.js script tag in index.html');
@@ -34,6 +34,8 @@ console.log('Same-device cloud write coordinator verified.');
 
 const themePath='qoder-theme.css';
 const theme=fs.readFileSync(themePath,'utf8');
-if(!theme.includes('html.qoder-ui .hero')) throw new Error('Missing Qoder-inspired hero theme.');
-if(!theme.includes('--q-green:#32e66f')) throw new Error('Missing Qoder-inspired green accent.');
-console.log('Qoder-inspired main-site theme verified.');
+if(!theme.includes('html.qoder-ui .hero')) throw new Error('Missing main-site hero theme.');
+if(!theme.includes('--q-sidebar:#f1f5ef')) throw new Error('Main-site sidebar is not using the light palette.');
+if(!theme.includes('html.qoder-ui .focus{background:#eef8f1')) throw new Error('Focus card is not using the light palette.');
+if(!theme.includes('html.qoder-ui .live{background:#f2f8f3')) throw new Error('Live card is not using the light palette.');
+console.log('Light-only main-site theme verified.');
