@@ -25,9 +25,14 @@ jobs:
         run: node scripts/apply-ui-polish.mjs
       - name: Verify planner entry
         run: |
-          grep -F './notion-sync-v2.js?v=20261009-0540' index.html
-          grep -F "theme.href='./qoder-theme.css?v=20261009-0540'" notion-sync-v2.js
-          grep -F "document.documentElement.classList.add('qoder-ui')" notion-sync-v2.js
+          grep -F './notion-sync-v2.js?v=20261009-0550' index.html
+          grep -F 'id="mainThemeBoot"' index.html
+          grep -F 'id="mainThemeCss" rel="stylesheet" href="./qoder-theme.css?v=20261009-0550"' index.html
+          grep -F "document.documentElement.classList.add('qoder-ui')" index.html
+          if grep -F "theme.href='./qoder-theme.css" notion-sync-v2.js; then
+            echo 'Delayed theme injection is still present.'
+            exit 1
+          fi
           grep -F -- '--q-sidebar:#f1f5ef' qoder-theme.css
           grep -F 'html.qoder-ui .focus{background:#eef8f1' qoder-theme.css
           grep -F 'html.qoder-ui .live{background:#f2f8f3' qoder-theme.css
@@ -49,5 +54,5 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '4189822+github-actions[bot]@users.noreply.github.com'
           git add index.html
-          git commit -m 'Publish light-only main-site theme'
+          git commit -m 'Publish no-flash main theme boot'
           git push
