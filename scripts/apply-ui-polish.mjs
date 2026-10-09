@@ -3,7 +3,7 @@ import fs from 'node:fs';
 const path = 'index.html';
 let h = fs.readFileSync(path, 'utf8');
 const before = h;
-const version = '20261006-0510';
+const version = '20261009-0520';
 
 const scriptRe = /<script\s+src=["']\.\/notion-sync-v2\.js(?:\?v=[^"']*)?["']\s*><\/script>/;
 if (!scriptRe.test(h)) throw new Error('Missing notion-sync-v2.js script tag in index.html');
@@ -31,3 +31,9 @@ const coordinator=fs.readFileSync(coordinatorPath,'utf8');
 if(!coordinator.includes("navigator.locks.request(WEB_LOCK")) throw new Error('Missing same-device Web Locks coordinator.');
 if(!coordinator.includes("localStorage.getItem(REV_KEY)")) throw new Error('Missing shared revision refresh.');
 console.log('Same-device cloud write coordinator verified.');
+
+const themePath='qoder-theme.css';
+const theme=fs.readFileSync(themePath,'utf8');
+if(!theme.includes('html.qoder-ui .hero')) throw new Error('Missing Qoder-inspired hero theme.');
+if(!theme.includes('--q-green:#32e66f')) throw new Error('Missing Qoder-inspired green accent.');
+console.log('Qoder-inspired main-site theme verified.');
