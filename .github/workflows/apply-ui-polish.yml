@@ -25,11 +25,12 @@ jobs:
         run: node scripts/apply-ui-polish.mjs
       - name: Verify planner entry
         run: |
-          grep -F './notion-sync-v2.js?v=20261009-0520' index.html
-          grep -F "theme.href='./qoder-theme.css?v=20261009-0520'" notion-sync-v2.js
+          grep -F './notion-sync-v2.js?v=20261009-0540' index.html
+          grep -F "theme.href='./qoder-theme.css?v=20261009-0540'" notion-sync-v2.js
           grep -F "document.documentElement.classList.add('qoder-ui')" notion-sync-v2.js
-          grep -F 'html.qoder-ui .hero' qoder-theme.css
-          grep -F -- '--q-green:#32e66f' qoder-theme.css
+          grep -F -- '--q-sidebar:#f1f5ef' qoder-theme.css
+          grep -F 'html.qoder-ui .focus{background:#eef8f1' qoder-theme.css
+          grep -F 'html.qoder-ui .live{background:#f2f8f3' qoder-theme.css
           grep -F "load('./same-device-cloud-sync.js')" notion-sync-v2.js
           grep -F 'navigator.locks.request(WEB_LOCK' same-device-cloud-sync.js
           grep -F 'function dragDayFromX(x)' google-calendar-planner-v3.js
@@ -48,5 +49,5 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '4189822+github-actions[bot]@users.noreply.github.com'
           git add index.html
-          git commit -m 'Publish Qoder-inspired main-site theme'
+          git commit -m 'Publish light-only main-site theme'
           git push
