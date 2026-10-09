@@ -1,196 +1,159 @@
-/* Qoder-inspired visual system for the main study planner.
-   Scoped to html.qoder-ui so the standalone calendar keeps its own UI. */
+/* Restrained Qoder-inspired workspace theme.
+   Main site only. The standalone calendar is intentionally untouched. */
 html.qoder-ui{
-  --q-bg:#070907;
-  --q-bg-2:#0b0e0b;
-  --q-surface:#0f1310;
-  --q-surface-2:#131814;
-  --q-surface-3:#181e19;
-  --q-border:#242b25;
-  --q-border-strong:#343d35;
-  --q-text:#f4f7f4;
-  --q-text-2:#b2bbb4;
-  --q-muted:#737d76;
-  --q-green:#32e66f;
-  --q-green-2:#25c95d;
-  --q-green-soft:rgba(50,230,111,.10);
-  --q-green-glow:rgba(50,230,111,.24);
-  --q-danger:#ff7b72;
-  --q-radius:18px;
-  --q-radius-sm:12px;
-  color-scheme:dark;
+  --q-green:#24d866;
+  --q-green-deep:#159447;
+  --q-green-soft:#eaf9ef;
+  --q-ink:#141714;
+  --q-text:#2b312c;
+  --q-muted:#737b74;
+  --q-bg:#f5f7f4;
+  --q-surface:#ffffff;
+  --q-border:#e3e7e2;
+  --q-border-strong:#d6ddd6;
+  color-scheme:light;
   background:var(--q-bg);
 }
 html.qoder-ui body{
-  background:
-    radial-gradient(900px 460px at 63% -80px,rgba(33,178,86,.18),transparent 66%),
-    radial-gradient(620px 360px at 7% 24%,rgba(35,82,47,.12),transparent 72%),
-    var(--q-bg)!important;
+  background:var(--q-bg)!important;
   color:var(--q-text)!important;
   font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif!important;
-  letter-spacing:-.006em;
+  letter-spacing:-.004em;
 }
-html.qoder-ui body::before{
-  content:"";
-  position:fixed;
-  inset:0;
-  z-index:-2;
-  pointer-events:none;
-  background-image:
-    linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);
-  background-size:56px 56px;
-  mask-image:linear-gradient(to bottom,rgba(0,0,0,.58),transparent 72%);
-}
-html.qoder-ui body::after{
-  content:"";
-  position:fixed;
-  width:420px;
-  height:420px;
-  right:-180px;
-  top:24vh;
-  z-index:-1;
-  border-radius:50%;
-  background:rgba(45,235,112,.07);
-  filter:blur(100px);
-  pointer-events:none;
-}
-html.qoder-ui ::selection{background:rgba(50,230,111,.28);color:#fff}
-html.qoder-ui .app{grid-template-columns:246px minmax(0,1fr)!important;background:transparent!important}
+html.qoder-ui body::before,
+html.qoder-ui body::after{display:none!important}
+html.qoder-ui ::selection{background:#bff2cf;color:#102114}
+
+html.qoder-ui .app{grid-template-columns:232px minmax(0,1fr)!important;background:var(--q-bg)!important}
 html.qoder-ui .sidebar{
-  background:rgba(8,11,8,.88)!important;
-  border-right:1px solid var(--q-border)!important;
+  background:#0d100e!important;
+  color:#fff!important;
+  border-right:1px solid #171b18!important;
   box-shadow:none!important;
   padding:27px 18px!important;
-  backdrop-filter:blur(18px) saturate(125%);
 }
-html.qoder-ui .brand{margin:0 8px 34px!important;gap:12px!important}
+html.qoder-ui .brand{margin:0 8px 34px!important;gap:11px!important}
 html.qoder-ui .mark{
-  width:38px!important;height:38px!important;border-radius:11px!important;
-  background:linear-gradient(145deg,#45f47f,#20d861)!important;
-  color:#061008!important;
-  box-shadow:0 0 0 1px rgba(86,255,139,.42),0 8px 28px rgba(31,220,92,.16)!important;
-  font-family:Georgia,serif!important;
+  width:38px!important;height:38px!important;border-radius:10px!important;
+  background:var(--q-green)!important;color:#07130a!important;
+  box-shadow:none!important;font-family:Georgia,serif!important
 }
-html.qoder-ui .brand b{color:#f4f7f4!important;font-size:16px!important;font-weight:760!important;letter-spacing:-.02em!important}
-html.qoder-ui .brand small{color:#68736b!important;letter-spacing:1.5px!important}
-html.qoder-ui .side-label{color:#505a52!important;font-size:9px!important;font-weight:750!important;letter-spacing:1.8px!important}
-html.qoder-ui .sidebar nav{gap:5px!important}
+html.qoder-ui .brand b{color:#f5f7f5!important;font-size:16px!important;font-weight:760!important;letter-spacing:-.02em!important}
+html.qoder-ui .brand small{color:#687169!important;letter-spacing:1.4px!important}
+html.qoder-ui .side-label{color:#586159!important;font-size:9px!important;font-weight:750!important;letter-spacing:1.7px!important}
+html.qoder-ui .sidebar nav{gap:4px!important}
 html.qoder-ui .sidebar nav a{
-  min-height:42px!important;padding:11px 13px!important;
-  color:#89928b!important;border:1px solid transparent!important;border-radius:11px!important;
-  transition:background .16s ease,border-color .16s ease,color .16s ease,transform .16s ease!important;
+  min-height:41px!important;padding:11px 12px!important;
+  color:#8e9890!important;border:1px solid transparent!important;border-radius:9px!important;
+  transition:.15s ease!important
 }
-html.qoder-ui .sidebar nav a span{color:#515b53!important}
-html.qoder-ui .sidebar nav a:hover{
-  background:#101511!important;border-color:#1f2821!important;color:#d8dfda!important;transform:translateX(2px)!important
-}
+html.qoder-ui .sidebar nav a span{color:#566058!important}
+html.qoder-ui .sidebar nav a:hover{background:#151a16!important;color:#dfe5e0!important;transform:none!important}
 html.qoder-ui .sidebar nav a.active{
-  background:linear-gradient(90deg,rgba(50,230,111,.11),rgba(50,230,111,.025))!important;
-  border-color:#26372b!important;color:#eff7f1!important;
-  box-shadow:inset 2px 0 0 var(--q-green)!important;
+  background:#161d18!important;border-color:#202a22!important;color:#f5f7f5!important;
+  box-shadow:inset 2px 0 0 var(--q-green)!important
 }
 html.qoder-ui .sidebar nav a.active span{color:var(--q-green)!important}
-html.qoder-ui .content{max-width:1510px!important;padding:0 44px 88px!important;background:transparent!important}
+
+html.qoder-ui .content{max-width:1480px!important;padding:0 38px 78px!important;background:transparent!important}
 html.qoder-ui .topbar{
   position:sticky!important;top:0!important;z-index:35!important;
-  min-height:76px!important;padding:18px 0 16px!important;
-  background:linear-gradient(to bottom,rgba(7,9,7,.96) 58%,rgba(7,9,7,.78) 82%,transparent)!important;
-  backdrop-filter:blur(10px);
+  min-height:72px!important;padding:16px 0!important;
+  background:rgba(245,247,244,.92)!important;
+  backdrop-filter:blur(12px)!important;
+  border-bottom:1px solid rgba(225,229,224,.74)!important
 }
-html.qoder-ui .crumb{color:#626c64!important;font-size:11px!important}
-html.qoder-ui .crumb b{color:#dfe5e1!important}
+html.qoder-ui .crumb{color:#8a918b!important;font-size:11px!important}
+html.qoder-ui .crumb b{color:#313832!important}
 html.qoder-ui .actions{gap:7px!important}
 html.qoder-ui .btn{
-  min-height:39px!important;padding:9px 14px!important;border-radius:10px!important;
-  border:1px solid #2a312b!important;background:#111512!important;color:#c8d0ca!important;
-  box-shadow:none!important;font-weight:690!important;transition:.16s ease!important;
+  min-height:38px!important;padding:8px 13px!important;border-radius:9px!important;
+  border:1px solid var(--q-border-strong)!important;background:#fff!important;color:#414842!important;
+  box-shadow:none!important;font-weight:690!important;transition:.14s ease!important
 }
-html.qoder-ui .btn:hover{background:#181d19!important;border-color:#3a443c!important;color:#fff!important;transform:translateY(-1px)!important}
+html.qoder-ui .btn:hover{background:#f9faf8!important;border-color:#cbd3cc!important;transform:none!important}
 html.qoder-ui .btn.dark,
 html.qoder-ui .btn.purple{
-  background:var(--q-green)!important;border-color:var(--q-green)!important;color:#051108!important;
-  box-shadow:0 0 0 1px rgba(92,255,144,.12),0 8px 26px rgba(36,221,95,.10)!important;
+  background:#111512!important;border-color:#111512!important;color:#fff!important;box-shadow:none!important
 }
 html.qoder-ui .btn.dark:hover,
-html.qoder-ui .btn.purple:hover{background:#45ef7c!important;border-color:#45ef7c!important;color:#041008!important}
-html.qoder-ui .btn.ghost{background:transparent!important;color:#9ca69f!important}
+html.qoder-ui .btn.purple:hover{background:#1a211b!important;border-color:#1a211b!important;color:#fff!important}
+html.qoder-ui .btn.ghost{background:transparent!important;color:#697169!important}
+
 html.qoder-ui .hero{
-  min-height:360px!important;border-radius:24px!important;padding:54px 52px!important;
-  border:1px solid #202a22!important;
-  background:
-    radial-gradient(640px 310px at 68% 72%,rgba(37,226,103,.19),transparent 68%),
-    radial-gradient(430px 240px at 94% 10%,rgba(57,134,75,.11),transparent 72%),
-    linear-gradient(145deg,#0c100d 0%,#080b09 65%,#0b120d 100%)!important;
-  box-shadow:0 24px 70px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.02)!important;
-  overflow:hidden!important;
+  min-height:218px!important;border-radius:18px!important;padding:34px 36px!important;
+  border:1px solid var(--q-border)!important;
+  background:linear-gradient(135deg,#ffffff 0%,#fbfcfa 72%,#f3fbf5 100%)!important;
+  box-shadow:0 8px 28px rgba(28,42,31,.035)!important;
+  overflow:hidden!important
 }
-html.qoder-ui .hero::before{
-  content:"";position:absolute;right:6%;bottom:-118px;width:510px;height:300px;
-  background:radial-gradient(ellipse,rgba(50,230,111,.18),transparent 68%);filter:blur(22px);pointer-events:none
-}
+html.qoder-ui .hero::before{display:none!important}
 html.qoder-ui .hero::after{
-  width:520px!important;height:520px!important;right:-112px!important;top:-230px!important;
-  border:1px solid rgba(68,238,122,.10)!important;
-  box-shadow:0 0 0 62px rgba(58,204,104,.025),0 0 0 124px rgba(58,204,104,.018)!important;
+  display:block!important;width:210px!important;height:210px!important;right:-82px!important;top:-78px!important;
+  border:1px solid rgba(36,216,102,.13)!important;
+  box-shadow:0 0 0 38px rgba(36,216,102,.025),0 0 0 76px rgba(36,216,102,.015)!important
 }
 html.qoder-ui .eyebrow{
   display:inline-flex!important;align-items:center!important;gap:7px!important;
-  color:#9aa49d!important;background:#101611!important;border:1px solid #253028!important;
-  border-radius:999px!important;padding:7px 10px!important;letter-spacing:.06em!important;font-size:9px!important
+  color:#4f5a51!important;background:#f7faf7!important;border:1px solid #e4eae4!important;
+  border-radius:999px!important;padding:6px 9px!important;font-size:9px!important;letter-spacing:.06em!important
 }
-html.qoder-ui .eyebrow::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--q-green);box-shadow:0 0 14px var(--q-green)}
+html.qoder-ui .eyebrow::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--q-green)!important;box-shadow:none!important}
 html.qoder-ui .hero h1{
-  max-width:850px!important;margin:23px 0 15px!important;color:#f5f7f5!important;
+  max-width:830px!important;margin:17px 0 10px!important;color:#151915!important;
   font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-serif!important;
-  font-size:clamp(38px,4.4vw,67px)!important;line-height:1.05!important;font-weight:720!important;
-  letter-spacing:-.055em!important;text-wrap:balance
+  font-size:clamp(31px,3vw,47px)!important;line-height:1.12!important;font-weight:730!important;
+  letter-spacing:-.045em!important;text-wrap:balance
 }
-html.qoder-ui .hero p{max-width:760px!important;color:#8f9991!important;font-size:13px!important;line-height:1.9!important}
-html.qoder-ui .hero-pills{gap:7px!important;margin-top:8px!important}
+html.qoder-ui .hero p{max-width:790px!important;color:#747c75!important;font-size:12px!important;line-height:1.8!important;margin-bottom:12px!important}
+html.qoder-ui .hero-pills{gap:6px!important}
 html.qoder-ui .pill{
-  color:#8d9890!important;background:#101511!important;border:1px solid #252d27!important;
-  padding:7px 10px!important;font-size:10px!important;font-weight:650!important
+  color:#59625a!important;background:#f7f9f7!important;border:1px solid #e4e8e4!important;
+  padding:6px 9px!important;font-size:10px!important;font-weight:650!important
 }
-html.qoder-ui .hero-actions{margin-top:25px!important}
-html.qoder-ui .hero-number{right:48px!important;bottom:35px!important;color:var(--q-green)!important;opacity:.96!important}
-html.qoder-ui .hero-number b{font-size:52px!important;font-weight:730!important;font-family:Inter,-apple-system,sans-serif!important;letter-spacing:-.06em!important}
-html.qoder-ui .hero-number small{color:#667169!important;letter-spacing:.12em!important}
+html.qoder-ui .hero-actions{margin-top:15px!important}
+html.qoder-ui .hero-number{right:34px!important;bottom:26px!important;color:#1d7f43!important;opacity:.92!important}
+html.qoder-ui .hero-number b{font-size:40px!important;font-family:Inter,-apple-system,sans-serif!important;font-weight:720!important;letter-spacing:-.05em!important}
+html.qoder-ui .hero-number small{color:#8b948d!important;letter-spacing:.10em!important}
+
 html.qoder-ui .notice{
-  margin-top:14px!important;padding:14px 16px!important;border:1px solid #242c26!important;border-left:1px solid #2f3a32!important;
-  border-radius:13px!important;background:rgba(15,19,16,.86)!important;color:#7f8981!important;box-shadow:none!important
+  margin-top:12px!important;padding:12px 14px!important;
+  border:1px solid #e2e8e2!important;border-left:3px solid #b8dfc4!important;
+  border-radius:11px!important;background:#fbfcfb!important;color:#747d75!important;box-shadow:none!important
 }
-html.qoder-ui .notice strong{color:#cfd6d1!important}
-html.qoder-ui .notice a{color:var(--q-green)!important}
-html.qoder-ui .stats{gap:11px!important;margin-top:16px!important}
+html.qoder-ui .notice strong{color:#39413a!important}
+html.qoder-ui .notice a{color:#178a45!important}
+
+html.qoder-ui .stats{gap:10px!important;margin-top:14px!important}
 html.qoder-ui .stat,
 html.qoder-ui .panel,
 html.qoder-ui .mini-card{
-  background:linear-gradient(145deg,rgba(17,21,18,.98),rgba(12,16,13,.98))!important;
-  border:1px solid var(--q-border)!important;border-radius:var(--q-radius)!important;
-  box-shadow:0 14px 40px rgba(0,0,0,.12),inset 0 1px 0 rgba(255,255,255,.018)!important;
+  background:#fff!important;border:1px solid var(--q-border)!important;
+  border-radius:15px!important;box-shadow:0 6px 22px rgba(31,46,35,.035)!important
 }
-html.qoder-ui .stat{padding:18px 19px!important;transition:.18s ease!important}
-html.qoder-ui .stat:hover{border-color:#344137!important;transform:translateY(-2px)!important;background:#121713!important}
-html.qoder-ui .stat-top{color:#69736c!important;font-size:10px!important}
-html.qoder-ui .stat-top em{color:var(--q-green)!important}
-html.qoder-ui .stat-num{color:#f0f4f1!important;font-size:30px!important;font-weight:720!important;letter-spacing:-.045em!important}
-html.qoder-ui .stat-num small{color:#616b64!important}
-html.qoder-ui .stat-desc{color:#646e66!important}
-html.qoder-ui .bar{background:#1e2520!important;height:5px!important}
-html.qoder-ui .bar span{background:linear-gradient(90deg,var(--q-green-2),#54ee85)!important;box-shadow:0 0 16px rgba(50,230,111,.24)!important}
-html.qoder-ui .head{margin:46px 0 17px!important}
-html.qoder-ui .head small{color:var(--q-green)!important;font-size:9px!important;letter-spacing:.12em!important}
+html.qoder-ui .stat{padding:17px 18px!important;transition:.14s ease!important}
+html.qoder-ui .stat:hover{border-color:#d4dbd4!important;transform:none!important}
+html.qoder-ui .stat-top{color:#8b938c!important;font-size:10px!important}
+html.qoder-ui .stat-top em{color:#23a953!important}
+html.qoder-ui .stat-num{color:#202520!important;font-size:28px!important;font-weight:730!important;letter-spacing:-.04em!important}
+html.qoder-ui .stat-num small{color:#9ba19b!important}
+html.qoder-ui .stat-desc{color:#8a918a!important}
+html.qoder-ui .bar{background:#edf1ed!important;height:5px!important}
+html.qoder-ui .bar span{background:var(--q-green)!important;box-shadow:none!important}
+
+html.qoder-ui .head{margin:38px 0 15px!important}
+html.qoder-ui .head small{color:#1b9850!important;font-size:9px!important;letter-spacing:.11em!important}
 html.qoder-ui .head h2{
-  color:#eef2ef!important;font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-serif!important;
-  font-size:27px!important;font-weight:700!important;letter-spacing:-.035em!important
+  color:#222722!important;font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-serif!important;
+  font-size:25px!important;font-weight:720!important;letter-spacing:-.035em!important
 }
-html.qoder-ui .head p{color:#707b73!important}
-html.qoder-ui .head a{color:var(--q-green)!important}
-html.qoder-ui .panel{padding:23px!important}
-html.qoder-ui .panel-top{border-bottom:1px solid #1d241f!important;padding-bottom:16px!important;margin-bottom:18px!important}
-html.qoder-ui .panel-top h3{color:#e8ede9!important;font-weight:700!important;letter-spacing:-.02em!important}
-html.qoder-ui .panel-top p{color:#69736c!important}
+html.qoder-ui .head p{color:#828a83!important}
+html.qoder-ui .head a{color:#188a45!important}
+html.qoder-ui .panel{padding:22px!important}
+html.qoder-ui .panel-top{border-bottom:1px solid #eef1ee!important;padding-bottom:14px!important;margin-bottom:16px!important}
+html.qoder-ui .panel-top h3{color:#2a302a!important;font-weight:710!important;letter-spacing:-.02em!important}
+html.qoder-ui .panel-top p{color:#858d86!important}
+
 html.qoder-ui .date-nav input,
 html.qoder-ui .modebox select,
 html.qoder-ui .field input,
@@ -199,121 +162,112 @@ html.qoder-ui .field textarea,
 html.qoder-ui input,
 html.qoder-ui select,
 html.qoder-ui textarea{
-  color:#dce3de!important;background:#0b0f0c!important;border-color:#2a322c!important;box-shadow:none!important
+  color:#2d342e!important;background:#fff!important;border-color:#dfe5df!important;box-shadow:none!important
 }
 html.qoder-ui input::placeholder,
-html.qoder-ui textarea::placeholder{color:#4f5951!important}
+html.qoder-ui textarea::placeholder{color:#a5aba6!important}
 html.qoder-ui input:focus,
 html.qoder-ui select:focus,
-html.qoder-ui textarea:focus{border-color:#3c7550!important;box-shadow:0 0 0 3px rgba(50,230,111,.08)!important;outline:none!important}
+html.qoder-ui textarea:focus{border-color:#8acb9e!important;box-shadow:0 0 0 3px rgba(36,216,102,.08)!important;outline:none!important}
 html.qoder-ui button:focus-visible,
 html.qoder-ui input:focus-visible,
 html.qoder-ui select:focus-visible,
 html.qoder-ui textarea:focus-visible,
-html.qoder-ui a:focus-visible{outline:2px solid var(--q-green)!important;outline-offset:2px!important}
-html.qoder-ui .arrow{background:#101511!important;border-color:#29312b!important;color:#a5afa7!important}
-html.qoder-ui .arrow:hover{background:#171d18!important;color:#fff!important}
-html.qoder-ui .modebox{background:#0b100c!important;border:1px solid #1e2721!important;border-radius:13px!important}
+html.qoder-ui a:focus-visible{outline:2px solid #42c66e!important;outline-offset:2px!important}
+html.qoder-ui .arrow{background:#fff!important;border-color:#dfe5df!important;color:#677068!important}
+html.qoder-ui .arrow:hover{background:#f8faf8!important;color:#2b322c!important}
+html.qoder-ui .modebox{background:#f8faf8!important;border:1px solid #e6eae6!important;border-radius:11px!important}
 html.qoder-ui .modebox label,
-html.qoder-ui .field label{color:#758078!important}
-html.qoder-ui .day-meta{color:#646e66!important}
-html.qoder-ui .day-meta strong{color:#aeb8b0!important}
-html.qoder-ui .time-text{color:#606a63!important}
-html.qoder-ui .dot{background:#0c100d!important;border-color:var(--q-green)!important;box-shadow:0 0 0 4px rgba(50,230,111,.06)!important}
-html.qoder-ui .line{background:#273029!important}
+html.qoder-ui .field label{color:#747c75!important}
+html.qoder-ui .day-meta{color:#8a928b!important}
+html.qoder-ui .day-meta strong{color:#4f5750!important}
+html.qoder-ui .time-text{color:#808881!important}
+html.qoder-ui .dot{background:#fff!important;border-color:#7fd59b!important;box-shadow:none!important}
+html.qoder-ui .line{background:#e3e8e3!important}
+
 html.qoder-ui .task{
-  background:#0d120e!important;border:1px solid #202922!important;border-radius:13px!important;
-  transition:.16s ease!important;box-shadow:none!important
+  background:#fff!important;border:1px solid #e6eae6!important;border-radius:12px!important;
+  transition:.14s ease!important;box-shadow:none!important
 }
-html.qoder-ui .task:hover{border-color:#33543c!important;background:#111712!important;transform:translateY(-1px)!important}
-html.qoder-ui .task.done{background:#0b130e!important;border-color:#1f3a28!important}
-html.qoder-ui .task input[type="checkbox"]{accent-color:var(--q-green)!important}
-html.qoder-ui .task-title{color:#e7ece8!important;font-weight:700!important}
-html.qoder-ui .task.done .task-title{color:#657068!important}
-html.qoder-ui .task-desc{color:#707b73!important}
-html.qoder-ui .duration{color:#8bf5ad!important;background:#142219!important;border:1px solid #22392a!important}
-html.qoder-ui .subject{background:#172019!important;color:#9bb9a3!important;border:1px solid #25332a!important}
-html.qoder-ui .subject.phd{background:#10201b!important;color:#8ccab2!important;border-color:#1f3b31!important}
-html.qoder-ui .subject.apply{background:#211b10!important;color:#d3b477!important;border-color:#3a301e!important}
+html.qoder-ui .task:hover{border-color:#cfd8d0!important;background:#fcfdfc!important;transform:none!important}
+html.qoder-ui .task.done{background:#f7fbf8!important;border-color:#dbe9df!important}
+html.qoder-ui .task input[type="checkbox"]{accent-color:#22ad57!important}
+html.qoder-ui .task-title{color:#2b312c!important;font-weight:720!important}
+html.qoder-ui .task.done .task-title{color:#8b948d!important}
+html.qoder-ui .task-desc{color:#7f8780!important}
+html.qoder-ui .duration{color:#197c41!important;background:#eff9f2!important;border:1px solid #d7eedf!important}
+html.qoder-ui .subject{background:#f2f5f2!important;color:#657066!important;border:1px solid #e2e7e2!important}
+html.qoder-ui .subject.phd{background:#edf8f4!important;color:#3d7865!important;border-color:#d7ebe3!important}
+html.qoder-ui .subject.apply{background:#fbf6eb!important;color:#8b6a2c!important;border-color:#eee3c9!important}
+
 html.qoder-ui .focus{
-  background:radial-gradient(500px 210px at 75% 18%,rgba(50,230,111,.12),transparent 67%),linear-gradient(145deg,#0d120e,#090c0a)!important;
-  border-color:#26332a!important;color:#fff!important
+  background:#111512!important;border-color:#111512!important;color:#fff!important;box-shadow:none!important
 }
-html.qoder-ui .focus small{color:var(--q-green)!important}
-html.qoder-ui .focus h3{font-family:Inter,-apple-system,sans-serif!important;letter-spacing:-.035em!important;font-weight:700!important}
-html.qoder-ui .focus p{color:#7d8880!important}
-html.qoder-ui .focus-tags span{border-color:#2a382e!important;color:#9baa9f!important;background:#101611!important}
-html.qoder-ui .side-note h3{color:#e3e9e4!important}
-html.qoder-ui .side-note .line-item{border-color:#202721!important}
-html.qoder-ui .line-item b{background:#132018!important;color:var(--q-green)!important}
-html.qoder-ui .line-item strong{color:#d8dfda!important}
+html.qoder-ui .focus small{color:#64e58f!important}
+html.qoder-ui .focus h3{font-family:Inter,-apple-system,sans-serif!important;letter-spacing:-.035em!important;font-weight:710!important}
+html.qoder-ui .focus p{color:#a0aaa2!important}
+html.qoder-ui .focus-tags span{border-color:#2b342d!important;color:#b6c0b8!important;background:#171c18!important}
+html.qoder-ui .side-note h3{color:#2d332e!important}
+html.qoder-ui .side-note .line-item{border-color:#edf0ed!important}
+html.qoder-ui .line-item b{background:#edf9f1!important;color:#1b9b4c!important}
+html.qoder-ui .line-item strong{color:#3b423c!important}
 html.qoder-ui .line-item p,
-html.qoder-ui .settings-note{color:#69736c!important}
-html.qoder-ui .note-status{color:#6fd995!important}
-html.qoder-ui .module{
-  background:#0d110e!important;border-color:#242c26!important;border-radius:13px!important;
-  transition:.16s ease!important
-}
-html.qoder-ui .module:hover{border-color:#344137!important;background:#101511!important}
-html.qoder-ui .module h4{color:#d9e0db!important}
+html.qoder-ui .settings-note{color:#858d86!important}
+html.qoder-ui .note-status{color:#308c50!important}
+
+html.qoder-ui .module{background:#fff!important;border-color:#e5e9e5!important;border-radius:12px!important;transition:.14s ease!important}
+html.qoder-ui .module:hover{border-color:#d2d9d2!important;background:#fff!important}
+html.qoder-ui .module h4{color:#3b423c!important}
 html.qoder-ui .module h4 span,
 html.qoder-ui .module-input label,
-html.qoder-ui .module-duration>label{color:#657068!important}
-html.qoder-ui .module-input input{background:#090d0a!important;border-color:#29312b!important;color:#dce3de!important}
-html.qoder-ui .calc{color:#667169!important}
-html.qoder-ui .calc b{color:var(--q-green)!important}
-html.qoder-ui .live{
-  background:radial-gradient(430px 220px at 80% 0,rgba(50,230,111,.13),transparent 70%),#0a0e0b!important;
-  border:1px solid #263029!important;border-radius:18px!important;color:#fff!important
-}
-html.qoder-ui .live small{color:var(--q-green)!important}
+html.qoder-ui .module-duration>label{color:#8a928b!important}
+html.qoder-ui .module-input input{background:#fff!important;border-color:#e0e5e0!important;color:#2f3530!important}
+html.qoder-ui .calc{color:#8b938c!important}
+html.qoder-ui .calc b{color:#198e48!important}
+html.qoder-ui .live{background:#111512!important;border:1px solid #111512!important;border-radius:15px!important;color:#fff!important}
+html.qoder-ui .live small{color:#64e58f!important}
 html.qoder-ui .live h3{font-family:Inter,-apple-system,sans-serif!important;letter-spacing:-.035em!important}
-html.qoder-ui .live p{color:#78847b!important}
-html.qoder-ui .live hr{border-color:#212a23!important}
-html.qoder-ui table{color:#c9d1cb!important;border-color:#242c26!important}
-html.qoder-ui th{color:#7d8880!important;background:#0e130f!important;border-color:#242c26!important}
-html.qoder-ui td{border-color:#202721!important}
-html.qoder-ui tr:hover td{background:rgba(50,230,111,.025)!important}
-html.qoder-ui .form-actions{border-top-color:#202721!important}
-html.qoder-ui .edit-hint{color:#657068!important;background:#0b100c!important;border-color:#202922!important}
-html.qoder-ui .start-presets button{
-  background:#0d120e!important;border-color:#273029!important;color:#869188!important;border-radius:9px!important
-}
+html.qoder-ui .live p{color:#9ba59d!important}
+html.qoder-ui .live hr{border-color:#2a312b!important}
+
+html.qoder-ui table{color:#4a514b!important;border-color:#e5e9e5!important}
+html.qoder-ui th{color:#707871!important;background:#f8faf8!important;border-color:#e5e9e5!important}
+html.qoder-ui td{border-color:#edf0ed!important}
+html.qoder-ui tr:hover td{background:#fbfcfb!important}
+html.qoder-ui .edit-hint{color:#7f8780!important;background:#f8faf8!important;border-color:#e5e9e5!important}
+html.qoder-ui .start-presets button{background:#fff!important;border-color:#dde3dd!important;color:#697169!important;border-radius:8px!important}
 html.qoder-ui .start-presets button:hover,
-html.qoder-ui .start-presets button.active{background:#132119!important;border-color:#315941!important;color:#8df5ae!important}
-html.qoder-ui .task-toolbar{border-color:#202721!important}
-html.qoder-ui [class*="badge"],
-html.qoder-ui [class*="status"]{border-color:#29322b}
+html.qoder-ui .start-presets button.active{background:#edf9f1!important;border-color:#b7ddc3!important;color:#197d41!important}
 html.qoder-ui .danger,
-html.qoder-ui [data-delete]{color:var(--q-danger)!important}
+html.qoder-ui [data-delete]{color:#b94f4f!important}
 html.qoder-ui ::-webkit-scrollbar{width:10px;height:10px}
-html.qoder-ui ::-webkit-scrollbar-track{background:#080b09}
-html.qoder-ui ::-webkit-scrollbar-thumb{background:#2b332d;border:2px solid #080b09;border-radius:99px}
-html.qoder-ui ::-webkit-scrollbar-thumb:hover{background:#3a443c}
+html.qoder-ui ::-webkit-scrollbar-track{background:#f3f5f2}
+html.qoder-ui ::-webkit-scrollbar-thumb{background:#d3d9d3;border:2px solid #f3f5f2;border-radius:99px}
+html.qoder-ui ::-webkit-scrollbar-thumb:hover{background:#bcc5bd}
+
 @media(max-width:1120px){
-  html.qoder-ui .app{grid-template-columns:216px minmax(0,1fr)!important}
-  html.qoder-ui .content{padding-left:28px!important;padding-right:28px!important}
-  html.qoder-ui .hero{padding:46px 40px!important}
-  html.qoder-ui .hero-number{opacity:.42!important}
+  html.qoder-ui .app{grid-template-columns:210px minmax(0,1fr)!important}
+  html.qoder-ui .content{padding-left:26px!important;padding-right:26px!important}
+  html.qoder-ui .hero{padding:30px 30px!important}
 }
 @media(max-width:820px){
   html.qoder-ui .app{display:block!important}
-  html.qoder-ui .sidebar{position:relative!important;width:100%!important;height:auto!important;padding:16px 18px!important;border-right:0!important;border-bottom:1px solid var(--q-border)!important}
-  html.qoder-ui .brand{margin:0 0 13px!important}
+  html.qoder-ui .sidebar{position:relative!important;width:100%!important;height:auto!important;padding:15px 16px!important;border-right:0!important;border-bottom:1px solid #1e231f!important}
+  html.qoder-ui .brand{margin:0 0 12px!important}
   html.qoder-ui .side-label{display:none!important}
   html.qoder-ui .sidebar nav{display:flex!important;flex-direction:row!important;overflow:auto!important;padding-bottom:2px!important}
-  html.qoder-ui .sidebar nav a{white-space:nowrap!important;min-height:38px!important}
-  html.qoder-ui .content{padding:0 16px 64px!important}
-  html.qoder-ui .topbar{position:relative!important;min-height:auto!important;padding:15px 0!important}
-  html.qoder-ui .hero{min-height:330px!important;padding:38px 28px!important}
+  html.qoder-ui .sidebar nav a{white-space:nowrap!important;min-height:37px!important}
+  html.qoder-ui .content{padding:0 15px 58px!important}
+  html.qoder-ui .topbar{position:relative!important;min-height:auto!important;padding:14px 0!important}
+  html.qoder-ui .hero{min-height:auto!important;padding:28px 24px!important}
   html.qoder-ui .hero-number{display:none!important}
-  html.qoder-ui .hero h1{font-size:clamp(34px,9vw,52px)!important}
+  html.qoder-ui .hero h1{font-size:clamp(30px,8vw,42px)!important}
   html.qoder-ui .stats{grid-template-columns:repeat(2,minmax(0,1fr))!important}
 }
 @media(max-width:560px){
-  html.qoder-ui .hero{padding:31px 22px!important;border-radius:19px!important}
+  html.qoder-ui .hero{padding:25px 19px!important;border-radius:15px!important}
   html.qoder-ui .stats{grid-template-columns:1fr!important}
-  html.qoder-ui .panel{padding:18px!important}
+  html.qoder-ui .panel{padding:17px!important}
   html.qoder-ui .actions{width:100%!important}
   html.qoder-ui .actions .btn{flex:1 1 auto!important}
 }
