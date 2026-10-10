@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'scripts/apply-ui-polish.mjs'
+      - 'scripts/fix-task-time-save.mjs'
       - '.github/workflows/apply-ui-polish.yml'
       - 'qoder-theme.css'
       - 'notion-sync-v2.js'
@@ -23,7 +24,9 @@ jobs:
         with:
           node-version: '20'
       - name: Patch homepage entry
-        run: node scripts/apply-ui-polish.mjs
+        run: |
+          node scripts/apply-ui-polish.mjs
+          node scripts/fix-task-time-save.mjs
       - name: Verify planner entry
         run: |
           grep -F './notion-sync-v2.js?v=20261010-0560' index.html
@@ -32,6 +35,9 @@ jobs:
           grep -F "document.documentElement.classList.add('qoder-ui')" index.html
           grep -F "Math.max(Number(current?.revision||0)+1,Date.now())" index.html
           grep -F "最后修改已生效" index.html
+          grep -F "saveTime=e.target.closest('[data-save-time]')" index.html
+          grep -F 'type="text" inputmode="numeric" maxlength="5" placeholder="HH:MM"' index.html
+          grep -F 'function normalizeManualClock(' index.html
           if grep -F "revision=eq.'+remoteRevision" index.html; then
             echo 'Old optimistic revision conflict filter is still present.'
             exit 1
@@ -59,5 +65,5 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '4189822+github-actions[bot]@users.noreply.github.com'
           git add index.html
-          git commit -m 'Publish last-write-wins cloud sync'
+          git commit -m 'Publish manual task-time entry fix'
           git push
