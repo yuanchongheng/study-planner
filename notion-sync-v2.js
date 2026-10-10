@@ -17,7 +17,7 @@ if(legacyCalendar){legacyCalendar.classList.add('hidden');legacyCalendar.setAttr
 if(calendarMode){
  const s=document.createElement('style');
  s.textContent=`
- html,body{height:100%!important;overflow:hidden!important;background:#17181b!important}
+ html,body{height:100%!important;overflow:hidden!important;background:#17181b!important;color:#e8eaed!important}
  body>.app{display:block!important;min-height:100vh!important;background:#17181b!important}
  body>.app>.sidebar{display:none!important}
  body>.app>.content{width:100%!important;max-width:none!important;height:100vh!important;margin:0!important;padding:0!important;overflow:hidden!important;background:#17181b!important}
@@ -28,7 +28,7 @@ if(calendarMode){
  `;
  document.head.appendChild(s);
 }
-const V='20261010-0560';
+const V='20261010-2308';
 const load=src=>new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=src+(src.includes('?')?'&':'?')+'v='+V;s.onload=resolve;s.onerror=reject;document.head.appendChild(s)});
 const revealCalendar=()=>{if(!calendarMode)return;requestAnimationFrame(()=>requestAnimationFrame(()=>{document.documentElement.classList.remove('calendar-boot');document.documentElement.classList.add('calendar-ready')}))};
 const coreReady=load('./website-primary-policy.js')
