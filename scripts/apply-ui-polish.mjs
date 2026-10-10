@@ -41,6 +41,17 @@ h=h.replace("<button type=\"button\" class=\"btn ghost\" id=\"cloudResolve\">解
 h=h.replace("$('cloudResolve').addEventListener('click',async()=>{if(!cloudAuth)return;if(!cloudConflict){toast('当前没有检测到同步冲突。');return}if(!confirm('即将读取云端冲突版本。建议先点击顶部「导出全部备份」保存本地修改。确定继续吗？'))return;try{let rows=await cloudRows(),row=rows?.[0];if(!row)throw Error('云端记录不存在');let keepLocal=confirm('发现较新的云端记录。\\n\\n确定：保留当前设备的整份记录，覆盖云端最新版本。\\n取消：采用云端记录，舍弃本设备未同步的修改。\\n\\n请勿在未备份前操作。');if(keepLocal){remoteRevision=Number(row.revision);cloudConflict=false;cloudInitialized=true;cloudDirty=true;await cloudWrite()}else{cloudAdopt(row);cloudStatus('已采用云端最新记录','ok')}}catch(e){cloudTip('冲突处理失败：'+e.message)}});","$('cloudResolve').addEventListener('click',async()=>{if(!cloudAuth)return;if(cloudDirty&&!confirm('本设备还有未上传修改。重新读取云端会丢弃这些本地修改，确定继续吗？'))return;try{let rows=await cloudRows(),row=rows?.[0];if(!row)throw Error('云端记录不存在');cloudAdopt(row);cloudConflict=false;cloudStatus('已重新读取云端当前版本','ok');toast('已采用云端当前版本。')}catch(e){cloudTip('读取云端失败：'+e.message)}});");
 h=h.replace('备份依然重要：云端是同步工具，不等同于历史版本备份。跨设备尽量避免同时改同一批任务。','同步策略：最后一次成功保存的修改为准，不区分设备。备份仍然重要：云端同步不等同于历史版本备份。');
 
+// Wire the time-save button in the same timeline click handler that already
+// owns all task-card actions. This avoids relying on a later-loaded helper.
+if(!h.includes("saveTime=e.target.closest('[data-save-time]')")){
+  const clickStart="$('timeline').addEventListener('click',e=>{let eff=";
+  const dispatchPivot="saveTpl=e.target.closest('[data-save-task-template]');if(eff){";
+  if(!h.includes(clickStart)||!h.includes(dispatchPivot))throw new Error('Missing timeline task action handler');
+  h=h.replace(clickStart,"$('timeline').addEventListener('click',e=>{let saveTime=e.target.closest('[data-save-time]'),eff=");
+  h=h.replace(dispatchPivot,"saveTpl=e.target.closest('[data-save-task-template]');if(saveTime){let box=saveTime.closest('[data-time-box]'),startInput=box?.querySelector('[data-draft-start]'),endInput=box?.querySelector('[data-draft-end]');if(startInput&&endInput)editTaskTime(saveTime.dataset.saveTime,startInput.value,endInput.value)}else if(eff){");
+}
+if(!h.includes("editTaskTime(saveTime.dataset.saveTime"))throw new Error('Task-time save button is not wired');
+
 if(h.includes("revision=eq.'+remoteRevision"))throw new Error('Optimistic revision conflict filter is still present.');
 if(!h.includes("Math.max(Number(current?.revision||0)+1,Date.now())"))throw new Error('Missing last-write-wins revision generation.');
 if(!h.includes("最后修改已生效"))throw new Error('Missing last-write-wins status text.');
