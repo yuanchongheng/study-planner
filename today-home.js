@@ -10,27 +10,6 @@ const mins=s=>{const m=String(s||'').match(/^(\d{1,2}):(\d{2})/);return m?Number
 const span=t=>{const p=String(t.time||'').split('—');return {start:p[0]||'',end:p[1]||''}};
 const nowMins=()=>{const d=new Date();return d.getHours()*60+d.getMinutes()};
 const weekday=['日','一','二','三','四','五','六'];
-
-// Main-page task cards expose editable start/end inputs, but the save button
-// was missing a click handler. Keep this delegated so it also works after
-// renderDay() replaces the timeline DOM.
-if(!window.__taskTimeSaveFixStarted){
- window.__taskTimeSaveFixStarted=true;
- document.addEventListener('click',e=>{
-  const btn=e.target.closest?.('[data-save-time]');
-  if(!btn)return;
-  const box=btn.closest?.('[data-time-box]');
-  const start=box?.querySelector?.('[data-draft-start]')?.value||'';
-  const end=box?.querySelector?.('[data-draft-end]')?.value||'';
-  const id=btn.dataset.saveTime||'';
-  if(!id||!start||!end)return;
-  if(typeof window.editTaskTime==='function'){
-   e.preventDefault();
-   window.editTaskTime(id,start,end);
-  }
- },true);
-}
-
 const host=document.createElement('section');
 host.id='todayHome';host.className='today-home';
 const style=document.createElement('style');
