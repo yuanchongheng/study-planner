@@ -11,9 +11,30 @@ const span=t=>{const p=String(t.time||'').split('—');return {start:p[0]||'',en
 const nowMins=()=>{const d=new Date();return d.getHours()*60+d.getMinutes()};
 const weekday=['日','一','二','三','四','五','六'];
 
-// Main-page task cards expose editable start/end inputs, but the save button
-// was missing a click handler. Keep this delegated so it also works after
-// renderDay() replaces the timeline DOM.
+// Tasks imported by external planning tools are stored as extraTasks with custom_* IDs.
+// Save their edited time directly into the task itself instead of relying on a transient
+// timeOverride. This keeps manual edits stable and makes imported tasks behave like native ones.
+function saveCustomTaskTime(id,start,end){
+ if(!String(id||'').startsWith('custom_'))return false;
+ const date=bridge.selected?.(),state=bridge.state?.(),day=state?.days?.[date];
+ const sp=bridge.timeSpan?.(start,end)||bridge.timeSpan?.(`${start}—${end}`);
+ if(!day||!sp)return false;
+ for(const [mode,list] of Object.entries(day.extraTasks||{})){
+  if(!Array.isArray(list))continue;
+  const entry=list.find(x=>String(x?.id)===String(id));
+  if(!entry)continue;
+  entry.time=`${start}—${end}`;
+  entry.minutes=sp.minutes;
+  if(day.timeOverrides?.[mode]){
+   delete day.timeOverrides[mode][id];
+   if(!Object.keys(day.timeOverrides[mode]).length)delete day.timeOverrides[mode];
+  }
+  bridge.commit?.();
+  return true;
+ }
+ return false;
+}
+
 if(!window.__taskTimeSaveFixStarted){
  window.__taskTimeSaveFixStarted=true;
  document.addEventListener('click',e=>{
@@ -24,10 +45,10 @@ if(!window.__taskTimeSaveFixStarted){
   const end=box?.querySelector?.('[data-draft-end]')?.value||'';
   const id=btn.dataset.saveTime||'';
   if(!id||!start||!end)return;
-  if(typeof window.editTaskTime==='function'){
-   e.preventDefault();
-   window.editTaskTime(id,start,end);
-  }
+  e.preventDefault();
+  e.stopImmediatePropagation();
+  if(saveCustomTaskTime(id,start,end))return;
+  if(typeof window.editTaskTime==='function')window.editTaskTime(id,start,end);
  },true);
 }
 
