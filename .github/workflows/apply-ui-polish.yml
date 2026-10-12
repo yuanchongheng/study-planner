@@ -26,9 +26,9 @@ jobs:
         run: node scripts/apply-ui-polish.mjs
       - name: Verify planner entry
         run: |
-          grep -E '\./notion-sync-v2\.js\?v=[0-9]+' index.html
+          grep -F './notion-sync-v2.js?v=' index.html
           grep -F 'id="mainThemeBoot"' index.html
-          grep -E 'id="mainThemeCss" rel="stylesheet" href="\./qoder-theme\.css\?v=[0-9]+"' index.html
+          grep -F 'id="mainThemeCss" rel="stylesheet" href="./qoder-theme.css?v=' index.html
           grep -F "document.documentElement.classList.add('qoder-ui')" index.html
           grep -F "Math.max(Number(current?.revision||0)+1,Date.now())" index.html
           grep -F "最后修改已生效" index.html
