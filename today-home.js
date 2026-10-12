@@ -5,61 +5,11 @@ window.__todayHomeStarted=true;
 const pad=n=>String(n).padStart(2,'0');
 const iso=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
 const today=()=>iso(new Date());
-const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[c]));
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const mins=s=>{const m=String(s||'').match(/^(\d{1,2}):(\d{2})/);return m?Number(m[1])*60+Number(m[2]):9999};
 const span=t=>{const p=String(t.time||'').split('—');return {start:p[0]||'',end:p[1]||''}};
 const nowMins=()=>{const d=new Date();return d.getHours()*60+d.getMinutes()};
 const weekday=['日','一','二','三','四','五','六'];
-
-// Keep the original compact time-field look, but use a text-backed control so
-// keyboard entry works consistently across browsers. The clock glyph is purely
-// visual; saving still uses the planner's existing editTaskTime() path.
-const clockStyle=document.createElement('style');
-clockStyle.textContent=`
-.task-time-edit input[data-manual-clock="1"]{width:104px!important;min-height:33px!important;padding:5px 30px 5px 7px!important;font-size:12px!important;font-variant-numeric:tabular-nums!important;background-color:#fff!important;background-repeat:no-repeat!important;background-position:right 8px center!important;background-size:15px 15px!important;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='8.5'/%3E%3Cpath d='M12 7v5l3 2'/%3E%3C/svg%3E")!important}
-.task-time-edit input[data-manual-clock="1"]:focus{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%237066df' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='8.5'/%3E%3Cpath d='M12 7v5l3 2'/%3E%3C/svg%3E")!important}
-`;
-document.head.appendChild(clockStyle);
-
-function normalizeClock(value){
- let s=String(value||'').trim().replace(/：/g,':');
- if(/^\d{3,4}$/.test(s)){s=s.padStart(4,'0');s=`${s.slice(0,2)}:${s.slice(2)}`}
- const m=s.match(/^(\d{1,2}):(\d{1,2})$/);
- if(!m)return s;
- const h=Number(m[1]),mi=Number(m[2]);
- if(h<0||h>23||mi<0||mi>59)return s;
- return `${pad(h)}:${pad(mi)}`;
-}
-function enhanceManualTimeInputs(root=document){
- const list=[];
- if(root?.matches?.('input[data-draft-start],input[data-draft-end]'))list.push(root);
- root?.querySelectorAll?.('input[data-draft-start],input[data-draft-end]').forEach(el=>list.push(el));
- for(const input of list){
-  if(input.dataset.manualClock==='1')continue;
-  const value=input.value;
-  try{input.type='text'}catch{}
-  input.value=value;
-  input.inputMode='numeric';
-  input.maxLength=5;
-  input.autocomplete='off';
-  input.spellcheck=false;
-  input.placeholder='HH:MM';
-  input.dataset.manualClock='1';
-  input.addEventListener('blur',()=>{const v=normalizeClock(input.value);if(v!==input.value)input.value=v});
-  input.addEventListener('keydown',e=>{
-   if(e.key==='Enter'){
-    e.preventDefault();
-    input.blur();
-    input.closest('[data-time-box]')?.querySelector('[data-save-time]')?.click();
-   }
-  });
- }
-}
-enhanceManualTimeInputs(document);
-const timeObserver=new MutationObserver(records=>{
- for(const r of records)for(const n of r.addedNodes)if(n.nodeType===1)enhanceManualTimeInputs(n);
-});
-timeObserver.observe(document.body,{childList:true,subtree:true});
 
 // Main-page task cards expose editable start/end inputs, but the save button
 // was missing a click handler. Keep this delegated so it also works after
@@ -70,13 +20,9 @@ if(!window.__taskTimeSaveFixStarted){
   const btn=e.target.closest?.('[data-save-time]');
   if(!btn)return;
   const box=btn.closest?.('[data-time-box]');
-  const startInput=box?.querySelector?.('[data-draft-start]');
-  const endInput=box?.querySelector?.('[data-draft-end]');
-  const start=normalizeClock(startInput?.value||'');
-  const end=normalizeClock(endInput?.value||'');
+  const start=box?.querySelector?.('[data-draft-start]')?.value||'';
+  const end=box?.querySelector?.('[data-draft-end]')?.value||'';
   const id=btn.dataset.saveTime||'';
-  if(startInput)startInput.value=start;
-  if(endInput)endInput.value=end;
   if(!id||!start||!end)return;
   if(typeof window.editTaskTime==='function'){
    e.preventDefault();
