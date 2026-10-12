@@ -2,7 +2,7 @@
 if(window.__taskTimeNativeStyleStarted)return;
 window.__taskTimeNativeStyleStarted=true;
 
-const SELECTOR='input[data-draft-start],input[data-draft-end]';
+const SELECTOR='input[data-draft-start],input[data-draft-end],.gcal-editor input[data-start],.gcal-editor input[data-end]';
 const pad=n=>String(n).padStart(2,'0');
 const style=document.createElement('style');
 style.id='taskTimeNativeCompactStyle';
@@ -26,6 +26,18 @@ style.textContent=`
  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='8.5'/%3E%3Cpath d='M12 7v5l3 2'/%3E%3C/svg%3E")!important;
 }
 .task-time-edit input[data-manual-clock="1"]:focus{
+ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%237066df' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='8.5'/%3E%3Cpath d='M12 7v5l3 2'/%3E%3C/svg%3E")!important;
+}
+.gcal-editor input[data-manual-clock="1"]{
+ font-variant-numeric:tabular-nums!important;
+ letter-spacing:0!important;
+ padding-right:34px!important;
+ background-repeat:no-repeat!important;
+ background-position:right 12px center!important;
+ background-size:16px 16px!important;
+ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%239aa0a6' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='8.5'/%3E%3Cpath d='M12 7v5l3 2'/%3E%3C/svg%3E")!important;
+}
+.gcal-editor input[data-manual-clock="1"]:focus{
  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%237066df' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='8.5'/%3E%3Cpath d='M12 7v5l3 2'/%3E%3C/svg%3E")!important;
 }
 `;
@@ -65,7 +77,7 @@ function writeSegment(input,segment,digits){
 }
 function segmentFromPoint(input,clientX){
  const r=input.getBoundingClientRect(),x=clientX-r.left;
- const editable=Math.max(48,r.width-27);
+ const editable=Math.max(48,r.width-32);
  if(x>=editable)return null;
  return x<editable*.52?'hour':'minute';
 }
@@ -129,8 +141,9 @@ document.addEventListener('keydown',e=>{
  }
  if(e.key==='Enter'){
   e.preventDefault();
-  const box=input.closest('[data-time-box]');
-  box?.querySelector('[data-save-time]')?.click();
+  const taskBox=input.closest('[data-time-box]');
+  if(taskBox){taskBox.querySelector('[data-save-time]')?.click();return}
+  input.closest('.gcal-editor')?.querySelector('[data-save]')?.click();
   return;
  }
  if(!/^\d$/.test(e.key))return;
