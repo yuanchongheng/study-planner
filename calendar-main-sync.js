@@ -38,8 +38,8 @@ bridge.commit=()=>{const r=previousCommit();if(!applying)queueMicrotask(publish)
 
 function taskEditorActive(){
  const el=document.activeElement;
- if(el?.closest?.('[data-task-form],#addTaskForm'))return true;
- if(document.querySelector('[data-task-form] input:focus,[data-task-form] textarea:focus,[data-task-form] select:focus,#addTaskForm input:focus,#addTaskForm textarea:focus,#addTaskForm select:focus'))return true;
+ if(el?.closest?.('[data-task-form],#addTaskForm,[data-time-box]'))return true;
+ if(document.querySelector('[data-task-form] input:focus,[data-task-form] textarea:focus,[data-task-form] select:focus,#addTaskForm input:focus,#addTaskForm textarea:focus,#addTaskForm select:focus,[data-time-box] input:focus'))return true;
  return !!window.__studyPlannerTaskEditing;
 }
 function validState(next){return !!next&&next.version===1&&next.days&&typeof next.days==='object'}
@@ -62,7 +62,7 @@ function applyRaw(raw){
 function flushPending(){if(taskEditorActive()||!pendingRaw)return;const raw=pendingRaw;pendingRaw='';applyRaw(raw)}
 function finishLocalSave(){
  // The main-site edit that just completed is authoritative. Any state received
- // while the form was open predates the user's save and must not overwrite it.
+ // while the editor was open predates the user's save and must not overwrite it.
  pendingRaw='';
  window.__studyPlannerTaskEditing=false;
  lastRaw=serialize();
@@ -70,8 +70,9 @@ function finishLocalSave(){
  try{channel?.postMessage({type:'state',from:tabId,raw:lastRaw,at:Date.now()})}catch{}
 }
 
-document.addEventListener('focusin',e=>{if(e.target?.closest?.('[data-task-form],#addTaskForm'))window.__studyPlannerTaskEditing=true},true);
-document.addEventListener('input',e=>{if(e.target?.closest?.('[data-task-form],#addTaskForm'))window.__studyPlannerTaskEditing=true},true);
+document.addEventListener('focusin',e=>{if(e.target?.closest?.('[data-task-form],#addTaskForm,[data-time-box]'))window.__studyPlannerTaskEditing=true},true);
+document.addEventListener('input',e=>{if(e.target?.closest?.('[data-task-form],#addTaskForm,[data-time-box]'))window.__studyPlannerTaskEditing=true},true);
+document.addEventListener('change',e=>{if(e.target?.closest?.('[data-time-box]'))window.__studyPlannerTaskEditing=true},true);
 document.addEventListener('submit',e=>{
  if(!e.target?.matches?.('[data-task-form],#addTaskForm'))return;
  // Drop stale queued state immediately, before the site's own submit handler saves.
@@ -79,10 +80,15 @@ document.addEventListener('submit',e=>{
  setTimeout(finishLocalSave,350);
 },true);
 document.addEventListener('click',e=>{
+ if(e.target?.closest?.('[data-save-time]')){
+  pendingRaw='';
+  setTimeout(finishLocalSave,350);
+  return;
+ }
  if(e.target?.closest?.('[data-cancel-edit],#cancelAddTask'))setTimeout(()=>{window.__studyPlannerTaskEditing=false;flushPending()},80);
 },true);
 document.addEventListener('focusout',()=>setTimeout(()=>{
- if(!document.activeElement?.closest?.('[data-task-form],#addTaskForm')&&!document.querySelector('[data-task-form]')){
+ if(!document.activeElement?.closest?.('[data-task-form],#addTaskForm,[data-time-box]')&&!document.querySelector('[data-task-form],[data-time-box]')){
   window.__studyPlannerTaskEditing=false;flushPending();
  }
 },120),true);
