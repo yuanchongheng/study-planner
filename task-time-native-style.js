@@ -2,6 +2,7 @@
 if(window.__taskTimeNativeStyleStarted)return;
 window.__taskTimeNativeStyleStarted=true;
 
+const SELECTOR='input[data-draft-start],input[data-draft-end]';
 const style=document.createElement('style');
 style.id='taskTimeNativeCompactStyle';
 style.textContent=`
@@ -28,85 +29,136 @@ document.head.appendChild(style);
 const editState=new WeakMap();
 function stateFor(input){
  let state=editState.get(input);
- if(!state){state={segment:'hour',buffer:'',lastAt:0};editState.set(input,state)}
+ if(!state){state={segment:'hour',buffer:'',lastAt:0,handledKeyAt:0};editState.set(input,state)}
  return state;
 }
-function normalizeValue(input){
- const m=String(input.value||'').match(/^(\d{2}):(\d{2})$/);
- return m?{hour:m[1],minute:m[2]}:{hour:'00',minute:'00'};
-}
-function setSegmentValue(input,segment,digits){
- const parts=normalizeValue(input);
- const max=segment==='hour'?23:59;
- let n=Number(digits);
- if(!Number.isFinite(n))return false;
- if(n>max){digits=digits.slice(-1);n=Number(digits)}
- const value=String(n).padStart(2,'0');
- if(segment==='hour')parts.hour=value;else parts.minute=value;
- input.value=`${parts.hour}:${parts.minute}`;
- input.dispatchEvent(new Event('input',{bubbles:true}));
- return true;
-}
-function pointSegment(input,clientX){
- const r=input.getBoundingClientRect();
- const x=clientX-r.left;
- // Leave the native picker area untouched so the clock icon still behaves normally.
- const picker=27;
- const editable=Math.max(36,r.width-picker);
- if(x>=editable)return null;
- return x<editable*.48?'hour':'minute';
-}
-function prepareInput(input){
- if(!input||input.dataset.nativeClockEdit==='1')return;
+function ensureNative(input){
+ if(!input?.matches?.(SELECTOR))return false;
  const value=input.value;
  if(input.type!=='time'){
   try{input.type='time'}catch{}
   if(value)input.value=value;
  }
  input.step='300';
+ input.removeAttribute('readonly');
  input.removeAttribute('inputmode');
  input.removeAttribute('maxlength');
  input.removeAttribute('placeholder');
  delete input.dataset.manualClock;
- input.dataset.nativeClockEdit='1';
+ return true;
+}
+function partsFor(input){
+ const m=String(input.value||'').match(/^(\d{2}):(\d{2})$/);
+ return m?{hour:m[1],minute:m[2]}:{hour:'00',minute:'00'};
+}
+function commitDigits(input,segment,digits){
+ const parts=partsFor(input),max=segment==='hour'?23:59;
+ let n=Number(digits);
+ if(!Number.isFinite(n))return false;
+ if(n>max){digits=digits.slice(-1);n=Number(digits)}
+ if(!Number.isFinite(n)||n>max)return false;
+ const value=String(n).padStart(2,'0');
+ if(segment==='hour')parts.hour=value;else parts.minute=value;
+ const next=`${parts.hour}:${parts.minute}`;
+ const apply=()=>{
+  if(input.value!==next)input.value=next;
+  input.dispatchEvent(new Event('input',{bubbles:true}));
+ };
+ apply();
+ queueMicrotask(apply);
+ requestAnimationFrame(()=>{if(document.contains(input)&&input.value!==next)input.value=next});
+ return true;
+}
+function segmentFromPoint(input,clientX){
+ const r=input.getBoundingClientRect(),x=clientX-r.left;
+ // Keep roughly the rightmost 27px for the browser's native clock button.
+ const editable=Math.max(42,r.width-27);
+ if(x>=editable)return null;
+ return x<editable*.50?'hour':'minute';
+}
+function targetInput(e){
+ const t=e.target;
+ return t?.matches?.(SELECTOR)?t:null;
+}
+function resetBuffer(input){
+ const s=stateFor(input);s.buffer='';s.lastAt=0;
+}
 
- input.addEventListener('pointerdown',e=>{
-  const segment=pointSegment(input,e.clientX);
-  if(!segment)return;
-  const state=stateFor(input);
-  state.segment=segment;state.buffer='';state.lastAt=0;
- },true);
- input.addEventListener('keydown',e=>{
-  if(e.ctrlKey||e.metaKey||e.altKey)return;
-  const state=stateFor(input);
-  if(e.key==='ArrowLeft'){state.segment='hour';state.buffer='';return}
-  if(e.key==='ArrowRight'||e.key===':'||e.key==='；'){
-   state.segment='minute';state.buffer='';
-   if(e.key===':'||e.key==='；')e.preventDefault();
-   return;
-  }
-  if(!/^\d$/.test(e.key))return;
-  e.preventDefault();
-  const now=Date.now();
-  if(now-state.lastAt>1200||state.buffer.length>=2)state.buffer='';
-  state.lastAt=now;
-  state.buffer+=e.key;
-  const segment=state.segment||'hour';
-  if(!setSegmentValue(input,segment,state.buffer))return;
-  if(state.buffer.length===2){
-   state.buffer='';
-   if(segment==='hour')state.segment='minute';
-  }
- },true);
- input.addEventListener('blur',()=>{const state=stateFor(input);state.buffer='';state.lastAt=0});
- input.addEventListener('change',()=>{const state=stateFor(input);state.buffer='';state.lastAt=0});
+function prepare(root=document){
+ if(root?.matches?.(SELECTOR))ensureNative(root);
+ root?.querySelectorAll?.(SELECTOR).forEach(ensureNative);
 }
-function scan(root=document){
- if(root?.matches?.('input[data-draft-start],input[data-draft-end]'))prepareInput(root);
- root?.querySelectorAll?.('input[data-draft-start],input[data-draft-end]').forEach(prepareInput);
-}
-scan(document);
+prepare(document);
 new MutationObserver(records=>{
- for(const r of records)for(const n of r.addedNodes)if(n.nodeType===1)scan(n);
+ for(const r of records)for(const n of r.addedNodes)if(n.nodeType===1)prepare(n);
 }).observe(document.body,{childList:true,subtree:true});
+
+document.addEventListener('focusin',e=>{
+ const input=targetInput(e);if(!input)return;
+ ensureNative(input);
+ const s=stateFor(input);if(!s.segment)s.segment='hour';s.buffer='';s.lastAt=0;
+},true);
+
+document.addEventListener('pointerdown',e=>{
+ const input=targetInput(e);if(!input)return;
+ ensureNative(input);
+ const seg=segmentFromPoint(input,e.clientX);
+ if(!seg)return; // native clock icon/picker area
+ const s=stateFor(input);s.segment=seg;s.buffer='';s.lastAt=0;
+},true);
+
+document.addEventListener('keydown',e=>{
+ const input=targetInput(e);if(!input||e.ctrlKey||e.metaKey||e.altKey)return;
+ ensureNative(input);
+ const s=stateFor(input);
+ if(e.key==='ArrowLeft'){
+  s.segment='hour';s.buffer='';
+  return;
+ }
+ if(e.key==='ArrowRight'||e.key===':'||e.key==='；'){
+  s.segment='minute';s.buffer='';
+  if(e.key===':'||e.key==='；')e.preventDefault();
+  return;
+ }
+ if(e.key==='Backspace'||e.key==='Delete'){
+  s.buffer='';
+  return;
+ }
+ if(!/^\d$/.test(e.key))return;
+ e.preventDefault();
+ e.stopImmediatePropagation();
+ const now=Date.now();
+ if(now-s.lastAt>1500||s.buffer.length>=2)s.buffer='';
+ s.lastAt=now;s.handledKeyAt=now;s.buffer+=e.key;
+ const seg=s.segment||'hour';
+ if(!commitDigits(input,seg,s.buffer))return;
+ if(s.buffer.length===2){s.buffer='';if(seg==='hour')s.segment='minute'}
+},true);
+
+// Some browsers/IME paths surface numeric editing through beforeinput instead of keydown.
+document.addEventListener('beforeinput',e=>{
+ const input=targetInput(e);if(!input||e.inputType!=='insertText'||!/^\d$/.test(String(e.data||'')))return;
+ const s=stateFor(input),now=Date.now();
+ if(now-s.handledKeyAt<80)return;
+ e.preventDefault();
+ if(now-s.lastAt>1500||s.buffer.length>=2)s.buffer='';
+ s.lastAt=now;s.buffer+=String(e.data);
+ const seg=s.segment||'hour';
+ if(!commitDigits(input,seg,s.buffer))return;
+ if(s.buffer.length===2){s.buffer='';if(seg==='hour')s.segment='minute'}
+},true);
+
+document.addEventListener('paste',e=>{
+ const input=targetInput(e);if(!input)return;
+ const raw=String(e.clipboardData?.getData('text')||'').trim();
+ const m=raw.match(/^(\d{1,2}):?(\d{2})$/);if(!m)return;
+ const h=Number(m[1]),min=Number(m[2]);if(h>23||min>59)return;
+ e.preventDefault();e.stopImmediatePropagation();
+ input.value=`${String(h).padStart(2,'0')}:${String(min).padStart(2,'0')}`;
+ input.dispatchEvent(new Event('input',{bubbles:true}));
+ resetBuffer(input);
+},true);
+
+document.addEventListener('blur',e=>{const input=targetInput(e);if(input)resetBuffer(input)},true);
+document.addEventListener('change',e=>{const input=targetInput(e);if(input)resetBuffer(input)},true);
 })();
