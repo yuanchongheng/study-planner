@@ -2,9 +2,32 @@
 if(window.__taskTimeNativeStyleStarted)return;
 window.__taskTimeNativeStyleStarted=true;
 
-// Keep the planner's original compact styling. This helper only guarantees
-// that task start/end editors stay as native time controls, so clicking the
-// hour/minute segment lets the user type a replacement value directly.
+// Keep the original compact task-time control size. Only preserve the
+// browser-native time input behavior so hour/minute segments can be typed
+// over directly without clearing the existing value first.
+const style=document.createElement('style');
+style.id='taskTimeNativeCompactStyle';
+style.textContent=`
+.task-time-edit input[type="time"]{
+ width:104px!important;
+ min-width:104px!important;
+ height:33px!important;
+ min-height:33px!important;
+ padding:5px 7px!important;
+ border-radius:9px!important;
+ font-size:12px!important;
+ line-height:normal!important;
+ font-variant-numeric:tabular-nums!important;
+ color-scheme:light!important;
+}
+.task-time-edit input[type="time"]::-webkit-calendar-picker-indicator{
+ width:auto!important;
+ height:auto!important;
+ opacity:1!important;
+}
+`;
+document.head.appendChild(style);
+
 function restoreNativeTimeInputs(root=document){
  const nodes=[];
  if(root?.matches?.('input[data-draft-start],input[data-draft-end]'))nodes.push(root);
